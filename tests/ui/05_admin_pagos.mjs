@@ -59,8 +59,9 @@ try {
     await entrarComo(credencial('ADMIN_DEV_EMAIL'), credencial('ADMIN_DEV_PASSWORD'));
     await nav.ir('/pages/admin/pagos.html');
     await nav.esperarQue(tarjeta, { descripcion: 'tarjeta del cliente' });
-    await nav.esperarQue(`${tarjeta}.querySelector('img').naturalWidth > 0`, { descripcion: 'vista previa cargada' });
+    // Las vistas previas cargan de forma diferida: se llevan a la pantalla como haría una persona
     await nav.evaluar(`${tarjeta}.scrollIntoView()`);
+    await nav.esperarQue(`${tarjeta}.querySelector('img').naturalWidth > 0`, { descripcion: 'vista previa cargada' });
     await nav.captura('05-admin-pagos', { completa: false });
   });
 
