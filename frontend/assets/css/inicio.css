@@ -1,0 +1,105 @@
+/* ==========================================================================
+   Inicio público (modo "Persuade"): la cancha y su marcador en vivo
+   ========================================================================== */
+
+/* Césped con franjas de corte y líneas de cal */
+.portada {
+  position: relative; overflow: hidden; color: var(--cal);
+  background:
+    repeating-linear-gradient(90deg, var(--cesped-800) 0 88px, #0d4229 88px 176px);
+}
+/* Líneas de la cancha: línea central y círculo central */
+.portada::before, .portada::after { content: ""; position: absolute; pointer-events: none; }
+.portada::before {
+  top: 0; bottom: 0; left: 50%; width: 3px; translate: -50% 0; background: rgb(244 246 238 / 0.14);
+}
+.portada::after {
+  top: 50%; left: 50%; width: min(64vw, 520px); aspect-ratio: 1; translate: -50% -50%;
+  border: 3px solid rgb(244 246 238 / 0.14); border-radius: 50%;
+}
+.portada-grilla {
+  position: relative; z-index: 1; display: grid; gap: var(--e-6); align-items: center;
+  padding-block: var(--e-7) var(--e-7);
+}
+@media (min-width: 980px) {
+  .portada-grilla { grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); min-height: min(640px, calc(100vh - var(--alto-cabecera))); }
+}
+.portada-texto h1 {
+  font-family: var(--f-display); font-weight: 900; text-transform: uppercase;
+  font-size: clamp(3rem, 8vw, 5.75rem); line-height: 0.9; letter-spacing: 0.005em; max-width: 9ch;
+}
+.portada-bajada { margin-top: var(--e-4); font-size: var(--t-lg); line-height: 1.55; max-width: 44ch; color: rgb(244 246 238 / 0.88); }
+.portada-bajada strong { color: #fff; }
+.portada-acciones { display: flex; flex-wrap: wrap; gap: var(--e-3); margin-top: var(--e-5); }
+.portada-acciones .btn { min-height: 52px; padding-inline: var(--e-5); font-size: var(--t-lg); }
+
+.portada-marcador .marcador { box-shadow: 0 24px 48px -16px rgb(0 0 0 / 0.55), inset 0 0 0 2px var(--tablero-linea); }
+.portada-marcador .marcador-grilla { grid-template-columns: repeat(auto-fill, minmax(88px, 1fr)); }
+.marcador-nota { margin-top: var(--e-3); font-size: var(--t-sm); color: rgb(244 246 238 / 0.75); display: flex; align-items: center; gap: var(--e-2); }
+.marcador-nota::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--led); box-shadow: 0 0 0 4px rgb(255 178 63 / 0.2); }
+
+/* Secciones */
+.seccion { padding-block: var(--e-8); }
+.seccion .titulo-seccion { margin-bottom: var(--e-6); }
+
+/* Cómo funciona: tres paradas sobre una línea de cal */
+.jugada { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--e-6); position: relative; }
+@media (min-width: 820px) {
+  .jugada { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .jugada::before {
+    content: ""; position: absolute; top: 31px; left: 32px; right: 16%; height: 2px;
+    background: repeating-linear-gradient(90deg, var(--borde-fuerte) 0 10px, transparent 10px 18px);
+  }
+}
+.jugada li { position: relative; display: grid; gap: var(--e-2); align-content: start; }
+.jugada-icono {
+  display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%;
+  background: var(--tablero); color: var(--led); box-shadow: 0 0 0 6px var(--fondo);
+}
+.jugada-icono svg { width: 28px; height: 28px; }
+.jugada h3 { margin-top: var(--e-3); font-family: var(--f-display); font-weight: 800; font-size: var(--t-2xl); text-transform: uppercase; }
+.jugada p { color: var(--tinta-2); max-width: 34ch; }
+
+/* Precios: pizarra del tablero */
+.precios-seccion { background: var(--tablero); color: var(--cal); padding-block: var(--e-8); }
+.precios-seccion .titulo-seccion { margin-bottom: var(--e-6); }
+.precios-grilla { display: grid; gap: var(--e-6); align-items: start; }
+@media (min-width: 900px) { .precios-grilla { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); } }
+.lista-precios { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.lista-precios li {
+  display: flex; justify-content: space-between; align-items: center; gap: var(--e-4);
+  padding: var(--e-4) var(--e-5); background: var(--tablero-celda); border-radius: var(--r-sm);
+}
+.precio-cuando { display: grid; gap: 2px; }
+.precio-cuando strong { font-size: var(--t-lg); }
+.precio-cuando span { color: rgb(244 246 238 / 0.7); }
+.precio-monto { font-family: var(--f-display); font-weight: 900; font-size: 2.6rem; line-height: 1; color: var(--led); white-space: nowrap; }
+.precios-nota { margin-top: var(--e-3); font-size: var(--t-sm); color: rgb(244 246 238 / 0.7); }
+.horario-atencion { border: 2px solid var(--tablero-linea); border-radius: var(--r-lg); padding: var(--e-5); }
+.horario-atencion h3 { font-family: var(--f-display); font-weight: 800; font-size: var(--t-xl); text-transform: uppercase; margin-bottom: var(--e-3); }
+.horario-atencion dl { margin: 0; display: grid; }
+.horario-atencion dl div { display: flex; justify-content: space-between; padding: var(--e-2) 0; border-bottom: 1px dashed var(--tablero-linea); }
+.horario-atencion dd { margin: 0; font-weight: 600; }
+.horario-atencion .cerrado { color: var(--tablero-apagado); }
+
+/* Reglas y contacto */
+.reglas-y-contacto { display: grid; gap: var(--e-7); }
+@media (min-width: 900px) { .reglas-y-contacto { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); } }
+.reglas { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--e-4); }
+.reglas li { display: flex; gap: var(--e-3); align-items: flex-start; font-size: var(--t-lg); }
+.reglas svg { color: var(--cesped-500); margin-top: 3px; flex: none; }
+.contacto { display: grid; gap: var(--e-3); align-content: start; }
+.contacto .titulo-seccion { margin-bottom: var(--e-2); }
+.contacto-nombre { font-weight: 700; font-size: var(--t-lg); }
+.contacto-linea { display: flex; gap: var(--e-2); align-items: center; color: var(--tinta-2); }
+.contacto .btn { justify-self: start; }
+
+/* Cierre */
+.cierre {
+  background: repeating-linear-gradient(90deg, var(--cesped-800) 0 88px, #0d4229 88px 176px);
+  color: var(--cal); padding-block: var(--e-7);
+}
+.cierre-contenido { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--e-4); }
+.cierre h2 { font-family: var(--f-display); font-weight: 900; font-size: clamp(2.2rem, 5vw, 3.5rem); text-transform: uppercase; line-height: 1; }
+.cierre .btn { min-height: 52px; font-size: var(--t-lg); }
+main + .pie { margin-top: 0; }

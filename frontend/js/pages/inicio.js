@@ -1,18 +1,80 @@
-import { saludApi } from '../api/saludApi.js';
+import { publicoApi } from '../api/publicoApi.js';
+import { marcadorCargando, renderMarcador } from '../components/marcador.js';
+import { RUTAS } from '../config.js';
+import { iniciarPagina } from '../core/pagina.js';
+import { $, $$, html, pintar } from '../utils/dom.js';
+import { dinero, hora, hoyIso } from '../utils/formato.js';
+import { enlaceWhatsapp } from '../utils/whatsapp.js';
 
-const estadoApi = document.getElementById('estado-api');
-const estadoDb = document.getElementById('estado-db');
+await iniciarPagina({ acceso: 'publico' });
 
-function pintar(elemento, texto, correcto) {
-  elemento.textContent = texto;
-  elemento.className = `badge ${correcto ? 'text-bg-success' : 'text-bg-danger'}`;
-}
+const DIAS = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+const marcador = $('#marcador-hoy');
+marcadorCargando(marcador, hoyIso());
 
 try {
-  const salud = await saludApi.verificar();
-  pintar(estadoApi, 'funcionando', true);
-  pintar(estadoDb, salud.base_de_datos, salud.base_de_datos === 'conectada');
-} catch (error) {
-  pintar(estadoApi, error.message, false);
-  pintar(estadoDb, 'desconocido', false);
+  const [info, dias] = await Promise.all([publicoApi.info(), publicoApi.dias()]);
+  renderPrecios(info);
+  renderReglasYContacto(info);
+
+  // Hoy, o el próximo día con horarios libres
+  const dia = dias.find((d) => d.abierto && d.libres > 0) ?? dias[0];
+  const disponibilidad = await publicoApi.disponibilidad(dia.fecha);
+  renderMarcador(marcador, disponibilidad, {
+    alSeleccionar: (turno) => {
+      location.href = `${RUTAS.reservar}?fecha=${disponibilidad.fecha}&hora=${hora(turno.hora_inicio)}`;
+    },
+  });
+} catch {
+  pintar(marcador, html`<div class="marcador-mensaje"><i data-lucide="wifi-off"></i>
+    <strong>Sin conexión</strong><span>No pudimos cargar los horarios. <a href="${RUTAS.reservar}">Intenta en la página de reservas</a>.</span></div>`);
+}
+
+/** Resume los días de una tarifa: "Lunes a viernes", "Sábado y domingo"... */
+function textoDias(dias) {
+  const d = [...dias].sort((a, b) => a - b);
+  if (d.length === 7) return 'Todos los días';
+  const consecutivos = d.every((x, i) => i === 0 || x === d[i - 1] + 1);
+  if (consecutivos && d.length > 2) return `${DIAS[d[0] - 1]} a ${DIAS[d.at(-1) - 1].toLowerCase()}`;
+  return d.map((x, i) => (i === 0 ? DIAS[x - 1] : DIAS[x - 1].toLowerCase())).join(d.length === 2 ? ' y ' : ', ');
+}
+
+function renderPrecios(info) {
+  const tarifas = [...info.tarifas].sort((a, b) => Number(a.precio) - Number(b.precio));
+  pintar($('#tabla-precios'), tarifas.length
+    ? html`<ul class="lista-precios">${tarifas.map((t) => html`
+        <li>
+          <span class="precio-cuando"><strong>${textoDias(t.dias)}</strong><span class="num">${hora(t.hora_desde)} – ${hora(t.hora_hasta)}</span></span>
+          <span class="precio-monto num">${dinero(t.precio)}</span>
+        </li>`)}</ul>
+      <p class="precios-nota">Precio por turno de ${info.reglas.duracion_turno} minutos. Si un horario entra en dos tarifas, se aplica la mayor.</p>`
+    : html`<p>Los precios se publicarán pronto.</p>`);
+
+  const abiertos = info.horarios.filter((h) => !h.cerrado);
+  pintar($('#horario-atencion'), html`
+    <h3>Horario de atención</h3>
+    <dl>${info.horarios.map((h) => html`
+      <div class="${h.cerrado ? 'cerrado' : ''}"><dt>${DIAS[h.dia_semana - 1]}</dt>
+        <dd class="num">${h.cerrado ? 'Cerrado' : `${hora(h.hora_apertura)} – ${hora(h.hora_cierre)}`}</dd></div>`)}
+    </dl>
+    ${abiertos.length ? '' : html`<p>Por ahora la cancha no atiende.</p>`}`);
+}
+
+function renderReglasYContacto(info) {
+  const r = info.reglas;
+  pintar($('#reglas'), html`
+    <li><i data-lucide="calendar-range"></i><span>Reserva con hasta <strong>${r.dias_anticipacion} días</strong> de anticipación.</span></li>
+    <li><i data-lucide="timer"></i><span>Después de reservar tienes <strong>${r.minutos_pago} minutos</strong> para pagar; si no, el horario se libera.</span></li>
+    <li><i data-lucide="undo-2"></i><span>Puedes cancelar hasta <strong>${r.horas_cancelacion} horas</strong> antes del partido.</span></li>
+    <li><i data-lucide="shield-check"></i><span>Nunca se reserva dos veces el mismo horario: lo que ves libre, está libre.</span></li>`);
+
+  const n = info.negocio;
+  const whatsapp = enlaceWhatsapp(n.whatsapp, 'Hola, quiero consultar por la cancha.');
+  pintar($('#contacto'), html`
+    <h2 class="titulo-seccion">Contacto</h2>
+    <p class="contacto-nombre">${n.nombre}</p>
+    ${n.direccion ? html`<p><i data-lucide="map-pin"></i>${n.direccion}</p>` : ''}
+    ${n.email ? html`<p><i data-lucide="mail"></i><a href="mailto:${n.email}">${n.email}</a></p>` : ''}
+    ${whatsapp ? html`<a class="btn btn-primario" href="${whatsapp}" target="_blank" rel="noopener"><i data-lucide="message-circle"></i>Escribir por WhatsApp</a>` : ''}`);
+  $$('#contacto p').forEach((p) => p.classList.add('contacto-linea'));
 }
