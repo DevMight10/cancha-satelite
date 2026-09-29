@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 use App\Controllers\AuthController;
 use App\Controllers\PublicoController;
+use App\Controllers\ReservaController;
 use App\Controllers\SaludController;
 use App\Middleware\AdminMiddleware;
 use App\Middleware\AuthMiddleware;
@@ -34,3 +35,9 @@ $router->get('/publico/info', [PublicoController::class, 'info']);
 $router->get('/publico/qr', [PublicoController::class, 'qr']);
 $router->get('/disponibilidad', [PublicoController::class, 'disponibilidad']);
 $router->get('/disponibilidad/dias', [PublicoController::class, 'dias']);
+
+// Reservas del cliente
+$router->get('/reservas', [ReservaController::class, 'index'], $auth);
+$router->post('/reservas', [ReservaController::class, 'store'], $auth);
+$router->get('/reservas/{id}', [ReservaController::class, 'show'], $auth);
+$router->post('/reservas/{id}/cancelar', [ReservaController::class, 'cancelar'], $auth);
