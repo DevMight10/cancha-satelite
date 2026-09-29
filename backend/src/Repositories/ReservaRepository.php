@@ -32,6 +32,19 @@ final class ReservaRepository extends Repository
         );
     }
 
+    /** Reservas activas de un rango de fechas con los datos del cliente (agenda del administrador). */
+    public function activasEntre(int $canchaId, string $desde, string $hasta): array
+    {
+        return $this->fetchAll(
+            "SELECT r.id, r.fecha, r.hora_inicio, r.hora_fin, r.estado, r.origen, r.precio, r.cliente_nombre, r.cliente_telefono,
+                    (SELECT p.estado FROM pagos p WHERE p.reserva_id = r.id ORDER BY p.id DESC LIMIT 1) AS pago_estado
+             FROM reservas r
+             WHERE r.cancha_id = ? AND r.fecha BETWEEN ? AND ? AND r.estado NOT IN ('cancelada','expirada')
+             ORDER BY r.fecha, r.hora_inicio",
+            [$canchaId, $desde, $hasta]
+        );
+    }
+
     /** Cantidad de reservas activas por fecha en un rango (para la tira de días). */
     public function conteoActivasPorFecha(int $canchaId, string $desde, string $hasta): array
     {

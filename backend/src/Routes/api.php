@@ -11,6 +11,7 @@ declare(strict_types=1);
  * @var \App\Core\Router $router
  */
 
+use App\Controllers\Admin;
 use App\Controllers\AuthController;
 use App\Controllers\PagoController;
 use App\Controllers\PublicoController;
@@ -46,3 +47,9 @@ $router->post('/reservas/{id}/cancelar', [ReservaController::class, 'cancelar'],
 // Pagos del cliente
 $router->post('/reservas/{id}/pagos', [PagoController::class, 'store'], $auth);
 $router->get('/pagos/{id}/comprobante', [PagoController::class, 'comprobante'], $auth);
+
+// ---------------------------------------------------------------------------
+// Administración
+// ---------------------------------------------------------------------------
+$router->get('/admin/panel', [Admin\PanelController::class, 'index'], $admin);
+$router->get('/admin/contadores', [Admin\PanelController::class, 'contadores'], $admin);
