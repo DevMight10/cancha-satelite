@@ -70,6 +70,8 @@ $router->delete('/admin/tarifas/{id}', [Admin\ConfiguracionController::class, 'e
 $router->post('/admin/bloqueos', [Admin\ConfiguracionController::class, 'crearBloqueo'], $admin);
 $router->delete('/admin/bloqueos/{id}', [Admin\ConfiguracionController::class, 'eliminarBloqueo'], $admin);
 
+$router->get('/admin/reportes', [Admin\ReporteController::class, 'index'], $admin);
+
 $router->get('/admin/pagos', [Admin\PagoController::class, 'index'], $admin);
 $router->post('/admin/pagos/{id}/aprobar', [Admin\PagoController::class, 'aprobar'], $admin);
 $router->post('/admin/pagos/{id}/rechazar', [Admin\PagoController::class, 'rechazar'], $admin);

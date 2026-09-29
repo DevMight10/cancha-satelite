@@ -152,7 +152,7 @@ final class DisponibilidadService
         $turnos = [];
         for ($m = $inicio; $m + $duracion <= $cierre; $m += $duracion) {
             $horaInicio = Fecha::deMinutos($m);
-            $precio = $this->precio($tarifas, $dia, $horaInicio);
+            $precio = self::precio($tarifas, $dia, $horaInicio);
             if ($precio !== null) {
                 $turnos[] = ['hora_inicio' => $horaInicio, 'hora_fin' => Fecha::deMinutos($m + $duracion), 'precio' => $precio];
             }
@@ -161,7 +161,7 @@ final class DisponibilidadService
     }
 
     /** Tarifa más alta que cubre el día y la hora de inicio del turno. */
-    private function precio(array $tarifas, int $dia, string $horaInicio): ?string
+    public static function precio(array $tarifas, int $dia, string $horaInicio): ?string
     {
         $mejor = null;
         foreach ($tarifas as $t) {

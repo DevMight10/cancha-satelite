@@ -165,6 +165,52 @@
 .semana.precios .nivel-4 { background: var(--cesped-700); color: #fff; }
 .semana.precios .sin-tarifa { background: var(--rojo-suave); color: var(--rojo-texto); }
 
+/* Reportes */
+.acciones-fila.sin-margen { margin-top: 0; }
+.segmentos { display: flex; flex-wrap: wrap; gap: 4px; padding: 4px; background: var(--superficie-2); border-radius: var(--r); align-self: end; }
+.segmento { min-height: 40px; padding: 0 var(--e-3); border: 0; border-radius: var(--r-sm); background: transparent; font-weight: 600; color: var(--tinta-2); cursor: pointer; }
+.segmento:hover { color: var(--tinta); background: rgb(255 255 255 / 0.6); }
+.segmento[aria-pressed="true"] { background: var(--superficie); color: var(--cesped-700); box-shadow: var(--sombra-1); }
+
+.cifras { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: var(--e-3); margin: 0 0 var(--e-4); }
+.cifras div { display: grid; align-content: start; gap: 2px; padding: var(--e-4); background: var(--superficie); border: 1px solid var(--borde); border-radius: var(--r-lg); }
+.cifras dt { font-size: var(--t-sm); color: var(--tinta-2); font-weight: 600; }
+.cifras dd { margin: 0; font-weight: 700; font-size: 1.75rem; line-height: 1.15; color: var(--tinta); }
+.cifras small { color: var(--tinta-3); font-size: var(--t-xs); }
+.cifras .cifra-principal { background: var(--tablero); border-color: var(--tablero); }
+.cifras .cifra-principal dt { color: rgb(244 246 238 / 0.8); }
+.cifras .cifra-principal dd { font-size: 3rem; color: var(--led); }
+@media (min-width: 1100px) { .cifras .cifra-principal { grid-row: span 1; } }
+
+.tarjeta-grafico { background: var(--superficie); border: 1px solid var(--borde); border-radius: var(--r-lg); padding: var(--e-4) var(--e-5); margin-bottom: var(--e-4); min-width: 0; }
+.lienzo { position: relative; height: 280px; }
+.lienzo.bajo { height: 220px; }
+.ver-tabla { margin-top: var(--e-3); }
+.ver-tabla summary, .detalle-reservas summary { cursor: pointer; color: var(--cesped-600); font-weight: 600; font-size: var(--t-sm); min-height: 32px; display: flex; align-items: center; }
+.detalle-reservas summary { font-size: var(--t-lg); color: var(--tinta); margin: 0; }
+.ver-tabla .tabla-envoltura, .detalle-reservas .tabla-envoltura { margin-top: var(--e-3); max-height: 360px; overflow: auto; }
+.grid-reportes { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0 var(--e-4); }
+@media (min-width: 1100px) { .grid-reportes { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); } }
+
+.barras-h { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--e-3); }
+.barras-h li { display: grid; grid-template-columns: 150px minmax(0, 1fr) auto; gap: var(--e-3); align-items: center; }
+.barras-h-etiqueta { display: grid; font-weight: 600; }
+.barras-h-etiqueta small { color: var(--tinta-3); font-weight: 400; font-size: var(--t-xs); }
+.barras-h-pista { height: 16px; background: var(--cesped-50); border-radius: 0 4px 4px 0; }
+.barras-h-barra { display: block; height: 100%; background: var(--cesped-500); border-radius: 0 4px 4px 0; }
+@media (max-width: 520px) { .barras-h li { grid-template-columns: 1fr auto; } .barras-h-pista { grid-column: 1 / -1; grid-row: 2; } }
+
+.grid-horarios { display: grid; gap: var(--e-5); align-items: start; }
+@media (min-width: 900px) { .grid-horarios { grid-template-columns: minmax(0, 1fr) 240px; } }
+.semana-envoltura.sin-borde { border: 0; padding: 0; }
+.semana.mapa td.vacia { background: var(--superficie-2); opacity: 0.5; }
+.semana.mapa td[tabindex]:focus-visible { outline: 3px solid var(--led); outline-offset: 1px; }
+.top-titulo { margin-bottom: var(--e-2); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+.top-lista { margin: 0; padding-left: 1.4em; display: grid; gap: var(--e-2); }
+.top-lista li { padding: var(--e-2) 0; border-bottom: 1px dashed var(--borde); }
+.top-lista li strong { display: block; }
+.top-lista li span { color: var(--tinta-3); font-size: var(--t-sm); }
+
 /* Bandeja de pagos */
 .lista-pagos { display: grid; gap: var(--e-3); padding-top: var(--e-4); }
 .pago-tarjeta {

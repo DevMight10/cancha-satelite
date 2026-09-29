@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reportes · Cancha Satélite Norte</title>
+  <meta name="theme-color" content="#07140d">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="/assets/css/app.css" rel="stylesheet">
+  <link href="/assets/css/admin.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.469.0/dist/umd/lucide.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" defer></script>
+  <script type="module" src="/js/pages/admin/reportes.js"></script>
+</head>
+<body>
+  <header id="cabecera" class="cabecera"></header>
+  <div class="admin">
+    <nav id="admin-nav" class="admin-nav" aria-label="Administración"></nav>
+    <main class="admin-main">
+      <div class="admin-encabezado">
+        <div>
+          <h1 class="admin-titulo">Reportes</h1>
+          <p class="admin-subtitulo">Ingresos de reservas confirmadas, según el día del partido.</p>
+        </div>
+        <div class="acciones-fila sin-margen">
+          <button type="button" class="btn" id="exportar-excel"><i data-lucide="file-spreadsheet"></i>Excel</button>
+          <button type="button" class="btn" id="exportar-pdf"><i data-lucide="file-text"></i>PDF</button>
+        </div>
+      </div>
+
+      <form class="filtros" id="filtros" aria-label="Rango del reporte">
+        <div class="segmentos" role="group" aria-label="Periodo">
+          <button type="button" class="segmento" data-periodo="mes">Este mes</button>
+          <button type="button" class="segmento" data-periodo="mes-anterior">Mes anterior</button>
+          <button type="button" class="segmento" data-periodo="30">Últimos 30 días</button>
+          <button type="button" class="segmento" data-periodo="anio">Este año</button>
+        </div>
+        <div class="campo"><label for="desde">Desde</label><input class="control" type="date" id="desde" name="desde"></div>
+        <div class="campo"><label for="hasta">Hasta</label><input class="control" type="date" id="hasta" name="hasta"></div>
+      </form>
+
+      <dl class="cifras" id="cifras" aria-live="polite"></dl>
+
+      <section class="tarjeta-grafico" aria-labelledby="t-dias">
+        <h2 class="bloque-titulo" id="t-dias">Ingresos por día</h2>
+        <div class="lienzo"><canvas id="grafico-dias" role="img" aria-label="Gráfico de ingresos por día"></canvas></div>
+        <details class="ver-tabla"><summary>Ver como tabla</summary><div id="tabla-dias"></div></details>
+      </section>
+
+      <div class="grid-reportes">
+        <section class="tarjeta-grafico" aria-labelledby="t-meses">
+          <h2 class="bloque-titulo" id="t-meses">Ingresos por mes</h2>
+          <div class="lienzo bajo"><canvas id="grafico-meses" role="img" aria-label="Gráfico de ingresos por mes"></canvas></div>
+          <details class="ver-tabla"><summary>Ver como tabla</summary><div id="tabla-meses"></div></details>
+        </section>
+        <section class="tarjeta-grafico" aria-labelledby="t-metodos">
+          <h2 class="bloque-titulo" id="t-metodos">Por medio de pago</h2>
+          <div id="metodos"></div>
+        </section>
+      </div>
+
+      <section class="tarjeta-grafico" aria-labelledby="t-horarios">
+        <h2 class="bloque-titulo" id="t-horarios">Horarios más usados</h2>
+        <div class="grid-horarios">
+          <div class="semana-envoltura sin-borde" id="mapa-horarios"></div>
+          <div id="top-horarios"></div>
+        </div>
+      </section>
+
+      <details class="tarjeta-grafico detalle-reservas">
+        <summary class="bloque-titulo" id="t-detalle">Detalle de reservas confirmadas</summary>
+        <div id="tabla-detalle"></div>
+      </details>
+    </main>
+  </div>
+</body>
+</html>

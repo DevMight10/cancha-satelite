@@ -137,6 +137,12 @@ export async function abrirNavegador({ ancho = 1280, alto = 900 } = {}) {
       await nav.evaluar(`document.querySelector(${JSON.stringify(selector)}).dispatchEvent(new Event('change', { bubbles: true }))`);
     },
 
+    /** Guarda las descargas del navegador en una carpeta (para probar exportaciones). */
+    async permitirDescargas(carpeta) {
+      mkdirSync(carpeta, { recursive: true });
+      await enviar('Page.setDownloadBehavior', { behavior: 'allow', downloadPath: carpeta });
+    },
+
     texto: (selector) => nav.evaluar(`document.querySelector(${JSON.stringify(selector)})?.innerText ?? null`),
 
     async viewport(anchoV, altoV, movil = false) {
