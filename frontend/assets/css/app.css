@@ -539,3 +539,20 @@ input[type="file"].control::file-selector-button {
   background: var(--superficie-2); color: var(--tinta); padding: 6px 14px; margin-right: var(--e-3);
 }
 input[type="file"].control::file-selector-button:hover { background: var(--borde); }
+
+/* ---------- Mis reservas ---------- */
+.lista-reservas { display: grid; gap: var(--e-3); padding-block: var(--e-5) var(--e-8); }
+.reserva-fila {
+  display: grid; grid-template-columns: auto 1fr; gap: var(--e-3) var(--e-4); align-items: center;
+  background: var(--superficie); border: 1px solid var(--borde); border-radius: var(--r-lg); padding: var(--e-4); box-shadow: var(--sombra-1);
+}
+@media (min-width: 720px) { .reserva-fila { grid-template-columns: 120px 1fr auto; } }
+.reserva-hora {
+  display: grid; justify-items: center; gap: 2px; min-width: 96px; padding: var(--e-2) var(--e-3);
+  background: var(--tablero); color: var(--led); border-radius: var(--r);
+}
+.reserva-hora span { font-family: var(--f-display); font-weight: 900; font-size: 2rem; line-height: 1; }
+.reserva-hora small { color: var(--cal); font-size: var(--t-xs); font-weight: 600; text-align: center; }
+.reserva-info { display: grid; gap: 4px; justify-items: start; min-width: 0; }
+.reserva-acciones { display: flex; gap: var(--e-2); flex-wrap: wrap; grid-column: 1 / -1; }
+@media (min-width: 720px) { .reserva-acciones { grid-column: auto; justify-content: flex-end; } }
