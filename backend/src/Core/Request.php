@@ -7,11 +7,12 @@ namespace App\Core;
 use App\Exceptions\HttpException;
 
 /**
- * Datos de la petición HTTP actual: método, ruta, cuerpo JSON y parámetros.
+ * Datos de la petición HTTP actual: método, ruta, cuerpo (JSON o formulario),
+ * archivos y parámetros.
  */
 final class Request
 {
-    /** Usuario autenticado (lo completa el middleware de autenticación). */
+    /** Usuario autenticado (lo completa AuthMiddleware). */
     public ?array $usuario = null;
 
     private array $params = [];
@@ -36,20 +37,27 @@ final class Request
         );
     }
 
-    /** Cuerpo de la petición enviado como JSON. */
+    /**
+     * Cuerpo de la petición: JSON o, si se envió un formulario con archivos, $_POST.
+     */
     public function body(): array
     {
-        if ($this->body === null) {
-            $raw = (string) file_get_contents('php://input');
-            $data = $raw === '' ? [] : json_decode($raw, true);
-
-            if (!is_array($data)) {
-                throw new HttpException(400, 'El cuerpo de la petición no es un JSON válido');
-            }
-            $this->body = $data;
+        if ($this->body !== null) {
+            return $this->body;
         }
 
-        return $this->body;
+        $contentType = strtolower($_SERVER['CONTENT_TYPE'] ?? '');
+        if (str_starts_with($contentType, 'multipart/form-data') || str_starts_with($contentType, 'application/x-www-form-urlencoded')) {
+            return $this->body = $_POST;
+        }
+
+        $raw = (string) file_get_contents('php://input');
+        $data = $raw === '' ? [] : json_decode($raw, true);
+        if (!is_array($data)) {
+            throw new HttpException(400, 'El cuerpo de la petición no es un JSON válido');
+        }
+
+        return $this->body = $data;
     }
 
     public function input(string $key, mixed $default = null): mixed
@@ -60,7 +68,8 @@ final class Request
     /** Parámetro de la URL: /api/recurso?clave=valor */
     public function query(string $key, mixed $default = null): mixed
     {
-        return $_GET[$key] ?? $default;
+        $value = $_GET[$key] ?? $default;
+        return is_string($value) ? trim($value) : $value;
     }
 
     /** Parámetro de la ruta: /api/reservas/{id} */
@@ -69,8 +78,28 @@ final class Request
         return $this->params[$key] ?? null;
     }
 
+    /** Parámetro numérico de la ruta; 404 si no es un entero positivo. */
+    public function paramId(string $key = 'id'): int
+    {
+        $value = $this->param($key);
+        if ($value === null || !ctype_digit($value) || (int) $value < 1) {
+            throw new HttpException(404, 'Recurso no encontrado');
+        }
+        return (int) $value;
+    }
+
     public function setParams(array $params): void
     {
         $this->params = $params;
+    }
+
+    /** Archivo subido en un formulario, o null si no se envió. */
+    public function file(string $key): ?array
+    {
+        $file = $_FILES[$key] ?? null;
+        if (!is_array($file) || ($file['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
+            return null;
+        }
+        return $file;
     }
 }

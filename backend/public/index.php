@@ -38,6 +38,14 @@ try {
     ]);
     session_start();
 
+    // Protección CSRF: las peticiones que modifican datos deben venir de este mismo sitio
+    $method = strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET');
+    $origin = $_SERVER['HTTP_ORIGIN'] ?? null;
+    if (!in_array($method, ['GET', 'HEAD', 'OPTIONS'], true) && $origin !== null
+        && parse_url($origin, PHP_URL_HOST) !== parse_url('http://' . ($_SERVER['HTTP_HOST'] ?? ''), PHP_URL_HOST)) {
+        throw new HttpException(403, 'Origen no permitido');
+    }
+
     $router = new Router();
     require __DIR__ . '/../src/Routes/api.php';
 

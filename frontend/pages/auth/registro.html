@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Crear cuenta · Cancha Satélite Norte</title>
+  <meta name="theme-color" content="#07140d">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="/assets/css/app.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.469.0/dist/umd/lucide.min.js" defer></script>
+  <script type="module" src="/js/pages/registro.js"></script>
+</head>
+<body>
+  <header id="cabecera" class="cabecera"></header>
+
+  <main class="auth">
+    <section class="auth-tarjeta" aria-labelledby="titulo">
+      <h1 id="titulo">Crear cuenta</h1>
+      <p class="subtitulo">Con tu cuenta reservas en segundos y ves tus reservas cuando quieras.</p>
+
+      <form id="form-registro" class="formulario" novalidate>
+        <div class="aviso aviso-error" data-error-general hidden role="alert">
+          <i data-lucide="circle-alert"></i><span></span>
+        </div>
+
+        <div class="campo">
+          <label for="nombre">Nombre y apellido</label>
+          <input class="control" id="nombre" name="nombre" autocomplete="name" maxlength="100" required>
+          <p class="error-campo"></p>
+        </div>
+
+        <div class="campo">
+          <label for="telefono">Celular</label>
+          <div class="control-con-prefijo">
+            <span class="prefijo">+591</span>
+            <input class="control" id="telefono" name="telefono" type="tel" inputmode="numeric" autocomplete="tel-national" maxlength="12" placeholder="71234567" aria-describedby="telefono-ayuda" required>
+          </div>
+          <p class="ayuda" id="telefono-ayuda">Te escribimos por WhatsApp si hay cambios en tu reserva.</p>
+          <p class="error-campo"></p>
+        </div>
+
+        <div class="campo">
+          <label for="email">Correo</label>
+          <input class="control" id="email" name="email" type="email" autocomplete="email" inputmode="email" maxlength="150" required>
+          <p class="error-campo"></p>
+        </div>
+
+        <div class="campo">
+          <label for="password">Contraseña</label>
+          <input class="control" id="password" name="password" type="password" autocomplete="new-password" minlength="8" aria-describedby="password-ayuda" required>
+          <p class="ayuda" id="password-ayuda">Mínimo 8 caracteres.</p>
+          <p class="error-campo"></p>
+        </div>
+
+        <label class="casilla texto-sm">
+          <input type="checkbox" id="ver-password"> Mostrar contraseña
+        </label>
+
+        <button type="submit" class="btn btn-primario btn-bloque">Crear cuenta</button>
+      </form>
+
+      <p class="auth-pie">¿Ya tienes cuenta? <a href="/pages/auth/login.html">Inicia sesión</a></p>
+    </section>
+  </main>
+</body>
+</html>
