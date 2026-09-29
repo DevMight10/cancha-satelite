@@ -12,6 +12,7 @@ declare(strict_types=1);
  */
 
 use App\Controllers\AuthController;
+use App\Controllers\PagoController;
 use App\Controllers\PublicoController;
 use App\Controllers\ReservaController;
 use App\Controllers\SaludController;
@@ -41,3 +42,7 @@ $router->get('/reservas', [ReservaController::class, 'index'], $auth);
 $router->post('/reservas', [ReservaController::class, 'store'], $auth);
 $router->get('/reservas/{id}', [ReservaController::class, 'show'], $auth);
 $router->post('/reservas/{id}/cancelar', [ReservaController::class, 'cancelar'], $auth);
+
+// Pagos del cliente
+$router->post('/reservas/{id}/pagos', [PagoController::class, 'store'], $auth);
+$router->get('/pagos/{id}/comprobante', [PagoController::class, 'comprobante'], $auth);

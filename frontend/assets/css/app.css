@@ -475,6 +475,43 @@ button.nav-enlace { border: 0; background: none; cursor: pointer; font-size: var
   .resumen.con-turno .resumen-precio strong { font-size: 2rem; }
 }
 
+/* ---------- Ticket de reserva ---------- */
+.ticket {
+  position: relative; background: var(--tablero); color: var(--cal); border-radius: var(--r-lg);
+  padding: var(--e-5); box-shadow: var(--sombra-2); overflow: hidden;
+}
+/* Muescas laterales de ticket */
+.ticket::before, .ticket::after {
+  content: ""; position: absolute; top: 58%; width: 22px; height: 22px; border-radius: 50%; background: var(--fondo);
+}
+.ticket::before { left: -11px; }
+.ticket::after { right: -11px; }
+.ticket-cabecera { display: flex; justify-content: space-between; align-items: center; gap: var(--e-2); }
+.ticket-codigo { font-size: var(--t-sm); font-weight: 700; color: var(--led); letter-spacing: 0.08em; text-transform: uppercase; }
+.ticket-fecha { margin-top: var(--e-4); font-family: var(--f-display); font-weight: 800; font-size: var(--t-xl); text-transform: uppercase; }
+.ticket-hora { font-family: var(--f-display); font-weight: 900; font-size: 3.4rem; line-height: 1; color: var(--led); letter-spacing: 0.02em; }
+.ticket-hora span { color: var(--tablero-apagado); margin-inline: 6px; }
+.ticket-pie {
+  display: flex; justify-content: space-between; align-items: baseline; gap: var(--e-3);
+  margin-top: var(--e-5); padding-top: var(--e-4); border-top: 2px dashed var(--tablero-linea); color: rgb(244 246 238 / 0.8);
+}
+.ticket-pie strong { font-family: var(--f-display); font-weight: 800; font-size: var(--t-2xl); color: var(--cal); }
+
+/* ---------- Pagar ---------- */
+.pagar { display: grid; gap: var(--e-5); align-items: start; padding-bottom: var(--e-8); }
+@media (min-width: 960px) { .pagar { grid-template-columns: 360px minmax(0, 1fr); } }
+.pagar-lado, .pagar-principal { display: grid; gap: var(--e-4); min-width: 0; }
+.pago { display: grid; gap: var(--e-4); }
+.pago .panel-titulo { margin: var(--e-2) 0 0; }
+.metodo-qr { display: flex; flex-wrap: wrap; gap: var(--e-5); align-items: center; }
+.metodo-qr img { width: 220px; height: 220px; object-fit: contain; background: #fff; border: 2px solid var(--borde); border-radius: var(--r); padding: var(--e-2); }
+.metodo-qr > div { flex: 1 1 220px; display: grid; gap: var(--e-2); }
+.datos-pago { display: grid; gap: var(--e-2); margin: 0; }
+.datos-pago div { display: flex; justify-content: space-between; align-items: center; gap: var(--e-3); padding: var(--e-2) 0; border-bottom: 1px dashed var(--borde); }
+.datos-pago dt { color: var(--tinta-3); }
+.datos-pago dd { margin: 0; font-weight: 700; font-size: var(--t-lg); display: inline-flex; align-items: center; gap: var(--e-1); text-align: right; }
+.acciones-fila { display: flex; flex-wrap: wrap; gap: var(--e-3); margin-top: var(--e-4); }
+
 /* ---------- Autenticación ---------- */
 .auth {
   flex: 1; display: grid; place-items: center; padding: var(--e-6) var(--e-4);
@@ -495,3 +532,10 @@ button.nav-enlace { border: 0; background: none; cursor: pointer; font-size: var
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
 }
+.bloque-cargando { min-height: 260px; }
+.bloque-cargando.alto { min-height: 420px; }
+input[type="file"].control::file-selector-button {
+  font: inherit; font-weight: 600; border: 0; border-radius: var(--r-sm); cursor: pointer;
+  background: var(--superficie-2); color: var(--tinta); padding: 6px 14px; margin-right: var(--e-3);
+}
+input[type="file"].control::file-selector-button:hover { background: var(--borde); }

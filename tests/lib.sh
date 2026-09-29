@@ -4,6 +4,8 @@
 
 BASE="${BASE:-http://cancha-satelite.test/api}"
 TMP_DIR="$(mktemp -d)"
+# En Windows (Git Bash) se usa la ruta C:/... para que PHP y curl encuentren los archivos
+command -v cygpath >/dev/null && TMP_DIR="$(cygpath -m "$TMP_DIR")"
 PASADAS=0
 FALLIDAS=0
 STATUS=""

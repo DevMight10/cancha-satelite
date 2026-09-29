@@ -16,6 +16,9 @@ const RUTAS_NAVEGADOR = [
 ];
 
 export const BASE = process.env.BASE_UI ?? 'http://cancha-satelite.test';
+// VER=1 abre una ventana visible de Chrome y pausa entre acciones para poder seguir la prueba
+const VISIBLE = process.env.VER === '1';
+const PAUSA = VISIBLE ? Number(process.env.PAUSA ?? 700) : 0;
 export const CAPTURAS = join(dirname(fileURLToPath(import.meta.url)), 'capturas');
 
 const esperar = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -27,7 +30,7 @@ export async function abrirNavegador({ ancho = 1280, alto = 900 } = {}) {
   const perfil = mkdtempSync(join(tmpdir(), 'cancha-ui-'));
   const puerto = 9300 + Math.floor(Math.random() * 500);
   const proceso = spawn(ejecutable, [
-    '--headless=new', `--remote-debugging-port=${puerto}`, `--user-data-dir=${perfil}`,
+    ...(VISIBLE ? [] : ['--headless=new']), `--remote-debugging-port=${puerto}`, `--user-data-dir=${perfil}`,
     `--window-size=${ancho},${alto}`, '--no-first-run', '--no-default-browser-check', '--lang=es-BO', 'about:blank',
   ], { stdio: 'ignore' });
 
@@ -108,6 +111,7 @@ export async function abrirNavegador({ ancho = 1280, alto = 900 } = {}) {
     },
 
     async escribir(selector, texto) {
+      await esperar(PAUSA / 2);
       await nav.esperarQue(`document.querySelector(${JSON.stringify(selector)})`, { descripcion: selector });
       await nav.evaluar(`(() => {
         const el = document.querySelector(${JSON.stringify(selector)});
@@ -118,6 +122,7 @@ export async function abrirNavegador({ ancho = 1280, alto = 900 } = {}) {
     },
 
     async clic(selector) {
+      await esperar(PAUSA);
       await nav.esperarQue(`document.querySelector(${JSON.stringify(selector)})`, { descripcion: selector });
       await nav.evaluar(`document.querySelector(${JSON.stringify(selector)}).click()`);
       await esperar(250);
@@ -127,7 +132,7 @@ export async function abrirNavegador({ ancho = 1280, alto = 900 } = {}) {
     async subirArchivo(selector, rutaArchivo) {
       const { root } = await enviar('DOM.getDocument', { depth: 0 });
       const { nodeId } = await enviar('DOM.querySelector', { nodeId: root.nodeId, selector });
-      await enviar('DOM.setFileInputFiles', { nodeId, files: [rutaArchivo] });
+      await enviar('DOM.setFileInputFiles', { nodeId, files: [rutaArchivo.replaceAll('\\', '/')] });
       await nav.evaluar(`document.querySelector(${JSON.stringify(selector)}).dispatchEvent(new Event('change', { bubbles: true }))`);
     },
 
@@ -148,6 +153,7 @@ export async function abrirNavegador({ ancho = 1280, alto = 900 } = {}) {
     },
 
     async cerrar() {
+      await esperar(PAUSA * 3); // en modo visible, deja ver el resultado final
       try { await enviar('Browser.close'); } catch { /* ya cerrado */ }
       ws.close();
       proceso.kill();
