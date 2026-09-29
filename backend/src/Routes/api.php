@@ -54,6 +54,11 @@ $router->get('/pagos/{id}/comprobante', [PagoController::class, 'comprobante'], 
 $router->get('/admin/panel', [Admin\PanelController::class, 'index'], $admin);
 $router->get('/admin/contadores', [Admin\PanelController::class, 'contadores'], $admin);
 
+$router->get('/admin/reservas', [Admin\ReservaController::class, 'index'], $admin);
+$router->post('/admin/reservas', [Admin\ReservaController::class, 'store'], $admin);
+$router->post('/admin/reservas/{id}/cancelar', [Admin\ReservaController::class, 'cancelar'], $admin);
+$router->post('/admin/reservas/{id}/cobrar-efectivo', [Admin\ReservaController::class, 'cobrarEfectivo'], $admin);
+
 $router->get('/admin/pagos', [Admin\PagoController::class, 'index'], $admin);
 $router->post('/admin/pagos/{id}/aprobar', [Admin\PagoController::class, 'aprobar'], $admin);
 $router->post('/admin/pagos/{id}/rechazar', [Admin\PagoController::class, 'rechazar'], $admin);

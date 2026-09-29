@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reservas · Cancha Satélite Norte</title>
+  <meta name="theme-color" content="#07140d">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="/assets/css/app.css" rel="stylesheet">
+  <link href="/assets/css/admin.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.469.0/dist/umd/lucide.min.js" defer></script>
+  <script type="module" src="/js/pages/admin/reservas.js"></script>
+</head>
+<body>
+  <header id="cabecera" class="cabecera"></header>
+  <div class="admin">
+    <nav id="admin-nav" class="admin-nav" aria-label="Administración"></nav>
+    <main class="admin-main">
+      <div class="admin-encabezado">
+        <div>
+          <h1 class="admin-titulo">Reservas</h1>
+          <p class="admin-subtitulo">Busca, cobra en efectivo, cancela o registra reservas hechas en la cancha.</p>
+        </div>
+        <button type="button" class="btn btn-primario" id="abrir-nueva" aria-expanded="false" aria-controls="nueva"><i data-lucide="plus"></i>Reserva presencial</button>
+      </div>
+
+      <section class="panel panel-nueva" id="nueva" hidden aria-labelledby="titulo-nueva">
+        <h2 class="panel-titulo" id="titulo-nueva">Nueva reserva presencial</h2>
+        <form id="form-nueva" class="formulario" novalidate>
+          <div class="aviso aviso-error" data-error-general hidden role="alert"><i data-lucide="circle-alert"></i><span></span></div>
+          <div class="fila-campos">
+            <div class="campo">
+              <label for="n-fecha">Día</label>
+              <input class="control" type="date" id="n-fecha" name="fecha" required>
+              <p class="error-campo"></p>
+            </div>
+            <div class="campo">
+              <label for="n-hora">Horario</label>
+              <select class="control" id="n-hora" name="hora_inicio" required></select>
+              <p class="error-campo"></p>
+            </div>
+            <div class="campo">
+              <label for="n-nombre">Nombre del cliente</label>
+              <input class="control" id="n-nombre" name="cliente_nombre" maxlength="100" autocomplete="off" required>
+              <p class="error-campo"></p>
+            </div>
+            <div class="campo">
+              <label for="n-telefono">Celular</label>
+              <input class="control" id="n-telefono" name="cliente_telefono" type="tel" inputmode="numeric" maxlength="12" placeholder="71234567" required>
+              <p class="error-campo"></p>
+            </div>
+          </div>
+          <div class="nueva-pie">
+            <label class="casilla"><input type="checkbox" name="pagado" id="n-pagado" value="1"> Ya pagó en efectivo (<span id="n-precio">—</span>)</label>
+            <div class="acciones-fila">
+              <button type="button" class="btn" id="cerrar-nueva">Cancelar</button>
+              <button type="submit" class="btn btn-primario"><i data-lucide="check"></i>Registrar reserva</button>
+            </div>
+          </div>
+        </form>
+      </section>
+
+      <form class="filtros" id="filtros" role="search" aria-label="Filtrar reservas">
+        <div class="campo"><label for="f-desde">Desde</label><input class="control" type="date" id="f-desde" name="desde"></div>
+        <div class="campo"><label for="f-hasta">Hasta</label><input class="control" type="date" id="f-hasta" name="hasta"></div>
+        <div class="campo">
+          <label for="f-estado">Estado</label>
+          <select class="control" id="f-estado" name="estado">
+            <option value="">Todos</option>
+            <option value="pendiente_pago">Pendiente de pago</option>
+            <option value="en_revision">Pago en revisión</option>
+            <option value="confirmada">Confirmada</option>
+            <option value="cancelada">Cancelada</option>
+            <option value="expirada">Vencida</option>
+          </select>
+        </div>
+        <div class="campo ancho"><label for="f-buscar">Cliente</label><input class="control" type="search" id="f-buscar" name="buscar" placeholder="Nombre o celular"></div>
+      </form>
+
+      <p class="texto-sm texto-suave" id="conteo" aria-live="polite"></p>
+      <div id="tabla"><div class="esqueleto bloque-cargando"></div></div>
+    </main>
+  </div>
+</body>
+</html>

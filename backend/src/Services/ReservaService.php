@@ -115,7 +115,10 @@ final class ReservaService
         if ($turno === null) {
             throw ValidationException::campo('hora_inicio', 'Ese horario no está disponible para reservar ese día');
         }
-        if ($datos['fecha'] === Fecha::hoy() && $turno['hora_inicio'] <= date('H:i:s')) {
+        // En la web solo se reservan turnos que no empezaron; en la cancha se puede
+        // registrar el turno en curso (alguien que llega unos minutos tarde)
+        $limite = $datos['origen'] === 'presencial' ? $turno['hora_fin'] : $turno['hora_inicio'];
+        if ($datos['fecha'] === Fecha::hoy() && $limite <= date('H:i:s')) {
             throw new ConflictException('Ese horario ya pasó. Elige uno más tarde.');
         }
 

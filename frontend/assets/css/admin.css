@@ -116,6 +116,13 @@
 .leyenda-semana .l-pasado { background: var(--superficie-2); }
 .aviso-separado { margin-bottom: var(--e-4); }
 
+/* Reservas */
+.panel-nueva { margin-bottom: var(--e-5); }
+.nueva-pie { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--e-3); }
+.nueva-pie .acciones-fila { margin-top: 0; }
+.tabla tr.resaltada td { background: var(--led-suave); }
+#conteo { margin-bottom: var(--e-2); }
+
 /* Bandeja de pagos */
 .lista-pagos { display: grid; gap: var(--e-3); padding-top: var(--e-4); }
 .pago-tarjeta {
