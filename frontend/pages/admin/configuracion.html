@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Configuración · Cancha Satélite Norte</title>
+  <meta name="theme-color" content="#07140d">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="/assets/css/app.css" rel="stylesheet">
+  <link href="/assets/css/admin.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.469.0/dist/umd/lucide.min.js" defer></script>
+  <script type="module" src="/js/pages/admin/configuracion.js"></script>
+</head>
+<body>
+  <header id="cabecera" class="cabecera"></header>
+  <div class="admin">
+    <nav id="admin-nav" class="admin-nav" aria-label="Administración"></nav>
+    <main class="admin-main">
+      <div class="admin-encabezado">
+        <div>
+          <h1 class="admin-titulo">Configuración</h1>
+          <p class="admin-subtitulo">Horarios, precios, días sin atención, reglas de reserva y medios de pago.</p>
+        </div>
+      </div>
+
+      <div class="pestanas" role="tablist" aria-label="Secciones de configuración">
+        <button type="button" class="pestana" role="tab" data-seccion="horarios" id="tab-horarios" aria-controls="sec-horarios" aria-selected="true">Horarios</button>
+        <button type="button" class="pestana" role="tab" data-seccion="precios" id="tab-precios" aria-controls="sec-precios" aria-selected="false">Precios</button>
+        <button type="button" class="pestana" role="tab" data-seccion="bloqueos" id="tab-bloqueos" aria-controls="sec-bloqueos" aria-selected="false">Días bloqueados</button>
+        <button type="button" class="pestana" role="tab" data-seccion="pagos" id="tab-pagos" aria-controls="sec-pagos" aria-selected="false">Medios de pago</button>
+        <button type="button" class="pestana" role="tab" data-seccion="reglas" id="tab-reglas" aria-controls="sec-reglas" aria-selected="false">Reglas y negocio</button>
+      </div>
+
+      <!-- Horarios de apertura -->
+      <section class="seccion-config" id="sec-horarios" role="tabpanel" aria-labelledby="tab-horarios">
+        <form id="form-horarios" class="panel formulario" novalidate>
+          <div class="aviso aviso-error" data-error-general hidden role="alert"><i data-lucide="circle-alert"></i><span></span></div>
+          <div class="campo campo-corto">
+            <label for="duracion">Duración de cada turno</label>
+            <select class="control" id="duracion" name="duracion_turno"></select>
+          </div>
+          <div class="tabla-envoltura">
+            <table class="tabla tabla-horarios">
+              <thead><tr><th scope="col">Día</th><th scope="col">Atiende</th><th scope="col">Abre</th><th scope="col">Cierra</th></tr></thead>
+              <tbody id="filas-horarios"></tbody>
+            </table>
+          </div>
+          <div><button type="submit" class="btn btn-primario"><i data-lucide="save"></i>Guardar horarios</button></div>
+        </form>
+      </section>
+
+      <!-- Tarifas -->
+      <section class="seccion-config" id="sec-precios" role="tabpanel" aria-labelledby="tab-precios" hidden>
+        <div class="aviso aviso-info aviso-separado"><i data-lucide="info"></i>
+          <span>Si varias tarifas coinciden con un turno, <strong>se cobra la más alta</strong>. Así puedes tener una tarifa base y otras más caras de noche o el fin de semana.</span></div>
+
+        <form id="form-tarifa" class="panel formulario" novalidate>
+          <h2 class="panel-titulo" id="titulo-tarifa">Nueva tarifa</h2>
+          <input type="hidden" name="id">
+          <div class="aviso aviso-error" data-error-general hidden role="alert"><i data-lucide="circle-alert"></i><span></span></div>
+          <div class="fila-campos">
+            <div class="campo"><label for="t-nombre">Nombre</label><input class="control" id="t-nombre" name="nombre" maxlength="60" placeholder="Ej.: Nocturno" required><p class="error-campo"></p></div>
+            <div class="campo"><label for="t-desde">Desde</label><input class="control" type="time" id="t-desde" name="hora_desde" step="900" required><p class="error-campo"></p></div>
+            <div class="campo"><label for="t-hasta">Hasta</label><input class="control" type="time" id="t-hasta" name="hora_hasta" step="900" required><p class="error-campo"></p></div>
+            <div class="campo"><label for="t-precio">Precio por turno (Bs)</label><input class="control" type="number" id="t-precio" name="precio" min="1" step="1" inputmode="decimal" required><p class="error-campo"></p></div>
+          </div>
+          <fieldset class="campo dias-semana">
+            <legend class="etiqueta">Días</legend>
+            <div class="chips-dias" id="t-dias"></div>
+            <input type="hidden" name="dias">
+            <p class="error-campo"></p>
+          </fieldset>
+          <label class="casilla"><input type="checkbox" id="t-activa" checked> Activa</label>
+          <div class="acciones-fila">
+            <button type="submit" class="btn btn-primario"><i data-lucide="save"></i><span id="t-boton">Agregar tarifa</span></button>
+            <button type="button" class="btn" id="t-cancelar" hidden>Cancelar edición</button>
+          </div>
+        </form>
+
+        <h2 class="bloque-titulo espaciado">Tarifas</h2>
+        <div id="lista-tarifas"></div>
+
+        <h2 class="bloque-titulo espaciado">Vista previa: precio de cada turno</h2>
+        <div class="semana-envoltura" id="vista-precios"></div>
+      </section>
+
+      <!-- Días bloqueados -->
+      <section class="seccion-config" id="sec-bloqueos" role="tabpanel" aria-labelledby="tab-bloqueos" hidden>
+        <form id="form-bloqueo" class="panel formulario" novalidate>
+          <h2 class="panel-titulo">Bloquear un día</h2>
+          <p class="texto-suave texto-sm">Feriados, mantenimiento o eventos: ese día no se podrá reservar.</p>
+          <div class="aviso aviso-error" data-error-general hidden role="alert"><i data-lucide="circle-alert"></i><span></span></div>
+          <div class="fila-campos">
+            <div class="campo"><label for="b-fecha">Fecha</label><input class="control" type="date" id="b-fecha" name="fecha" required><p class="error-campo"></p></div>
+            <div class="campo"><label for="b-motivo">Motivo (lo verán los clientes)</label><input class="control" id="b-motivo" name="motivo" maxlength="150" placeholder="Ej.: Feriado, mantenimiento del césped" required><p class="error-campo"></p></div>
+          </div>
+          <div><button type="submit" class="btn btn-primario"><i data-lucide="calendar-x-2"></i>Bloquear día</button></div>
+        </form>
+        <div id="aviso-afectadas"></div>
+        <h2 class="bloque-titulo espaciado">Próximos días bloqueados</h2>
+        <div id="lista-bloqueos"></div>
+      </section>
+
+      <!-- Medios de pago -->
+      <section class="seccion-config" id="sec-pagos" role="tabpanel" aria-labelledby="tab-pagos" hidden>
+        <div class="grid-config">
+          <div class="panel formulario">
+            <h2 class="panel-titulo">QR Simple</h2>
+            <div class="qr-config">
+              <div class="qr-marco" id="qr-vista"></div>
+              <form id="form-qr" class="formulario" novalidate>
+                <div class="campo">
+                  <label for="qr">Imagen del QR de tu banco</label>
+                  <input class="control" type="file" id="qr" name="qr" accept="image/png,image/jpeg,image/webp" required>
+                  <p class="ayuda">PNG, JPG o WEBP de hasta 3 MB. Descárgalo desde la app de tu banco.</p>
+                  <p class="error-campo"></p>
+                </div>
+                <div class="acciones-fila">
+                  <button type="submit" class="btn btn-primario"><i data-lucide="upload"></i>Subir QR</button>
+                  <button type="button" class="btn btn-peligro" id="quitar-qr" hidden>Quitar QR</button>
+                </div>
+              </form>
+            </div>
+          </div>
+          <form id="form-pagos" class="panel formulario" novalidate data-general>
+            <h2 class="panel-titulo">Datos para pagar</h2>
+            <div class="aviso aviso-error" data-error-general hidden role="alert"><i data-lucide="circle-alert"></i><span></span></div>
+            <div class="campo"><label for="pago_qr_titular">Titular del QR</label><input class="control" id="pago_qr_titular" name="pago_qr_titular" maxlength="100"><p class="error-campo"></p></div>
+            <div class="fila-campos">
+              <div class="campo"><label for="pago_tigo_numero">Número Tigo Money</label><input class="control" id="pago_tigo_numero" name="pago_tigo_numero" type="tel" inputmode="numeric" maxlength="12"><p class="error-campo"></p></div>
+              <div class="campo"><label for="pago_tigo_titular">Titular Tigo Money</label><input class="control" id="pago_tigo_titular" name="pago_tigo_titular" maxlength="100"><p class="error-campo"></p></div>
+            </div>
+            <div class="fila-campos">
+              <div class="campo"><label for="pago_banco_nombre">Banco</label><input class="control" id="pago_banco_nombre" name="pago_banco_nombre" maxlength="80"><p class="error-campo"></p></div>
+              <div class="campo"><label for="pago_banco_cuenta">Número de cuenta</label><input class="control" id="pago_banco_cuenta" name="pago_banco_cuenta" maxlength="40"><p class="error-campo"></p></div>
+            </div>
+            <div class="campo"><label for="pago_banco_titular">Titular de la cuenta</label><input class="control" id="pago_banco_titular" name="pago_banco_titular" maxlength="100"><p class="error-campo"></p></div>
+            <p class="ayuda">Deja vacío un medio de pago para que no se muestre a los clientes.</p>
+            <div><button type="submit" class="btn btn-primario"><i data-lucide="save"></i>Guardar datos de pago</button></div>
+          </form>
+        </div>
+      </section>
+
+      <!-- Reglas y negocio -->
+      <section class="seccion-config" id="sec-reglas" role="tabpanel" aria-labelledby="tab-reglas" hidden>
+        <div class="grid-config">
+          <form id="form-reglas" class="panel formulario" novalidate data-general>
+            <h2 class="panel-titulo">Reglas de reserva</h2>
+            <div class="aviso aviso-error" data-error-general hidden role="alert"><i data-lucide="circle-alert"></i><span></span></div>
+            <div class="campo"><label for="reserva_dias_anticipacion">Se puede reservar con hasta (días)</label><input class="control" type="number" min="1" max="60" id="reserva_dias_anticipacion" name="reserva_dias_anticipacion" required><p class="error-campo"></p></div>
+            <div class="campo"><label for="reserva_minutos_pago">Minutos para pagar antes de liberar el horario</label><input class="control" type="number" min="5" max="1440" id="reserva_minutos_pago" name="reserva_minutos_pago" required><p class="error-campo"></p></div>
+            <div class="campo"><label for="reserva_horas_cancelacion">El cliente puede cancelar hasta (horas antes)</label><input class="control" type="number" min="0" max="72" id="reserva_horas_cancelacion" name="reserva_horas_cancelacion" required><p class="error-campo"></p></div>
+            <label class="casilla"><input type="checkbox" id="notificar_email"> Enviar avisos por correo a clientes y administración</label>
+            <div><button type="submit" class="btn btn-primario"><i data-lucide="save"></i>Guardar reglas</button></div>
+          </form>
+          <form id="form-negocio" class="panel formulario" novalidate data-general>
+            <h2 class="panel-titulo">Datos de la cancha</h2>
+            <div class="aviso aviso-error" data-error-general hidden role="alert"><i data-lucide="circle-alert"></i><span></span></div>
+            <div class="campo"><label for="negocio_nombre">Nombre</label><input class="control" id="negocio_nombre" name="negocio_nombre" maxlength="100" required><p class="error-campo"></p></div>
+            <div class="campo"><label for="negocio_direccion">Dirección</label><input class="control" id="negocio_direccion" name="negocio_direccion" maxlength="150"><p class="error-campo"></p></div>
+            <div class="campo"><label for="negocio_whatsapp">WhatsApp de la cancha</label><input class="control" id="negocio_whatsapp" name="negocio_whatsapp" type="tel" inputmode="numeric" maxlength="12"><p class="ayuda">Los clientes podrán escribirte desde la pantalla de pago.</p><p class="error-campo"></p></div>
+            <div class="campo"><label for="negocio_email">Correo para avisos de pagos</label><input class="control" id="negocio_email" name="negocio_email" type="email" maxlength="150"><p class="error-campo"></p></div>
+            <div><button type="submit" class="btn btn-primario"><i data-lucide="save"></i>Guardar datos</button></div>
+          </form>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

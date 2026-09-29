@@ -123,6 +123,48 @@
 .tabla tr.resaltada td { background: var(--led-suave); }
 #conteo { margin-bottom: var(--e-2); }
 
+/* Configuración */
+.seccion-config { padding-top: var(--e-4); display: grid; gap: var(--e-4); }
+.grid-config { display: grid; gap: var(--e-4); align-items: start; }
+@media (min-width: 1100px) { .grid-config { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.campo-corto { max-width: 260px; }
+.tabla-horarios td, .tabla-horarios th { vertical-align: middle; }
+.tabla-horarios .control { min-width: 120px; }
+.fila-cerrada td, .fila-cerrada th { color: var(--tinta-3); }
+.fila-cerrada .control { opacity: 0.5; }
+.bloque-titulo.espaciado { margin-top: var(--e-4); }
+.dias-semana { border: 0; padding: 0; margin: 0; }
+.chips-dias { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip-dia { position: relative; cursor: pointer; }
+.chip-dia input { position: absolute; opacity: 0; inset: 0; margin: 0; width: 100%; height: 100%; cursor: pointer; }
+.chip-dia span:first-of-type {
+  display: grid; place-items: center; width: 44px; height: 44px; border-radius: var(--r);
+  border: 2px solid var(--borde); font-weight: 700; background: var(--superficie);
+  transition: background-color var(--transicion), border-color var(--transicion), color var(--transicion);
+}
+.chip-dia input:checked + span { background: var(--tablero); border-color: var(--tablero); color: var(--led); }
+.chip-dia input:focus-visible + span { outline: 3px solid var(--cesped-500); outline-offset: 2px; }
+.lista-simple { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--e-2); }
+.lista-simple li {
+  display: flex; justify-content: space-between; align-items: center; gap: var(--e-3); flex-wrap: wrap;
+  padding: var(--e-3) var(--e-4); background: var(--superficie); border: 1px solid var(--borde); border-radius: var(--r);
+}
+.qr-config { display: flex; flex-wrap: wrap; gap: var(--e-5); align-items: flex-start; }
+.qr-marco {
+  display: grid; place-items: center; width: 200px; height: 200px; border: 2px dashed var(--borde);
+  border-radius: var(--r); background: #fff; text-align: center;
+}
+.qr-marco img { width: 180px; height: 180px; object-fit: contain; }
+.qr-marco span { display: grid; justify-items: center; gap: var(--e-2); }
+.qr-config form { flex: 1 1 240px; }
+/* Vista previa de precios: escala secuencial del césped */
+.semana.precios td { text-align: center; font-weight: 700; font-variant-numeric: tabular-nums; height: 26px; min-width: 44px; box-shadow: none; }
+.semana.precios .nivel-1 { background: var(--cesped-100); color: var(--cesped-700); }
+.semana.precios .nivel-2 { background: #9fd3b0; color: var(--cesped-800); }
+.semana.precios .nivel-3 { background: var(--cesped-400); color: #fff; }
+.semana.precios .nivel-4 { background: var(--cesped-700); color: #fff; }
+.semana.precios .sin-tarifa { background: var(--rojo-suave); color: var(--rojo-texto); }
+
 /* Bandeja de pagos */
 .lista-pagos { display: grid; gap: var(--e-3); padding-top: var(--e-4); }
 .pago-tarjeta {

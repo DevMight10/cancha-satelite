@@ -59,6 +59,17 @@ $router->post('/admin/reservas', [Admin\ReservaController::class, 'store'], $adm
 $router->post('/admin/reservas/{id}/cancelar', [Admin\ReservaController::class, 'cancelar'], $admin);
 $router->post('/admin/reservas/{id}/cobrar-efectivo', [Admin\ReservaController::class, 'cobrarEfectivo'], $admin);
 
+$router->get('/admin/configuracion', [Admin\ConfiguracionController::class, 'index'], $admin);
+$router->put('/admin/configuracion', [Admin\ConfiguracionController::class, 'guardar'], $admin);
+$router->post('/admin/configuracion/qr', [Admin\ConfiguracionController::class, 'subirQr'], $admin);
+$router->delete('/admin/configuracion/qr', [Admin\ConfiguracionController::class, 'eliminarQr'], $admin);
+$router->put('/admin/horarios', [Admin\ConfiguracionController::class, 'horarios'], $admin);
+$router->post('/admin/tarifas', [Admin\ConfiguracionController::class, 'crearTarifa'], $admin);
+$router->put('/admin/tarifas/{id}', [Admin\ConfiguracionController::class, 'actualizarTarifa'], $admin);
+$router->delete('/admin/tarifas/{id}', [Admin\ConfiguracionController::class, 'eliminarTarifa'], $admin);
+$router->post('/admin/bloqueos', [Admin\ConfiguracionController::class, 'crearBloqueo'], $admin);
+$router->delete('/admin/bloqueos/{id}', [Admin\ConfiguracionController::class, 'eliminarBloqueo'], $admin);
+
 $router->get('/admin/pagos', [Admin\PagoController::class, 'index'], $admin);
 $router->post('/admin/pagos/{id}/aprobar', [Admin\PagoController::class, 'aprobar'], $admin);
 $router->post('/admin/pagos/{id}/rechazar', [Admin\PagoController::class, 'rechazar'], $admin);

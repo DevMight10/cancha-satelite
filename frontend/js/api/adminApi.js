@@ -26,6 +26,7 @@ export const adminApi = {
   crearBloqueo: (fecha, motivo) => http.post('/admin/bloqueos', { fecha, motivo }),
   eliminarBloqueo: (id) => http.delete(`/admin/bloqueos/${id}`),
   subirQr: (formData) => http.post('/admin/configuracion/qr', formData),
+  eliminarQr: () => http.delete('/admin/configuracion/qr'),
 
   // Reportes
   reportes: (desde, hasta) => http.get(`/admin/reportes${query({ desde, hasta })}`),

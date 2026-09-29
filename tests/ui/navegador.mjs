@@ -91,7 +91,8 @@ export async function abrirNavegador({ ancho = 1280, alto = 900 } = {}) {
         oyentes.push(o);
       });
       await enviar('Page.navigate', { url: ruta.startsWith('http') ? ruta : BASE + ruta });
-      await cargada;
+      // Un cambio de solo "#hash" no dispara "load": no esperar más de 10 s
+      await Promise.race([cargada, esperar(10000)]);
       await esperar(400); // módulos y peticiones iniciales
     },
 
