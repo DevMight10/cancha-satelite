@@ -1,6 +1,7 @@
 -- Esquema del sistema de reservas y pagos de la cancha de Satélite Norte.
 -- Ejecutar después de 01_crear_base.sql.
 
+SET NAMES utf8mb4;
 USE cancha_satelite;
 
 -- ---------------------------------------------------------------------------

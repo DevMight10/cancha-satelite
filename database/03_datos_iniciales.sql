@@ -1,6 +1,7 @@
 -- Datos iniciales. Los horarios, precios y datos de pago son DE EJEMPLO:
 -- el administrador debe reemplazarlos desde el panel (Configuración).
 
+SET NAMES utf8mb4;
 USE cancha_satelite;
 
 INSERT IGNORE INTO canchas (id, nombre, descripcion, duracion_turno)

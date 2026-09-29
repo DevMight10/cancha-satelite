@@ -4,6 +4,13 @@
 Options -Indexes
 DirectoryIndex index.html
 
+# HTML, CSS y JS se revalidan siempre: después de cada cambio el navegador toma la versión nueva
+<IfModule mod_headers.c>
+  <FilesMatch "\.(html|css|js)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>
+
 RewriteEngine On
 
 # 1. API

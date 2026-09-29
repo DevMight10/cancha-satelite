@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reservar · Cancha Satélite Norte</title>
+  <meta name="theme-color" content="#07140d">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="/assets/css/app.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.469.0/dist/umd/lucide.min.js" defer></script>
+  <script type="module" src="/js/pages/reservar.js"></script>
+</head>
+<body>
+  <header id="cabecera" class="cabecera"></header>
+
+  <main>
+    <section class="contenedor encabezado-pagina">
+      <h1 class="titulo-pagina">Reserva tu hora</h1>
+      <p class="subtitulo" id="reglas">Elige el día y un horario libre del marcador.</p>
+    </section>
+
+    <section class="contenedor reservar">
+      <div class="reservar-principal">
+        <h2 class="visualmente-oculto">Día</h2>
+        <div class="tira-dias" id="tira-dias" role="group" aria-label="Elige el día">
+          <div class="esqueleto tira-cargando"></div>
+        </div>
+        <h2 class="visualmente-oculto">Horarios</h2>
+        <div class="marcador" id="marcador" aria-live="polite"></div>
+      </div>
+
+      <aside class="resumen" id="resumen" aria-live="polite" aria-labelledby="resumen-titulo"></aside>
+    </section>
+  </main>
+</body>
+</html>

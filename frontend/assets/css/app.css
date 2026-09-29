@@ -403,7 +403,7 @@ button.nav-enlace { border: 0; background: none; cursor: pointer; font-size: var
   font-family: var(--f-display); font-weight: 800; font-size: 1.9rem; line-height: 1;
   font-variant-numeric: tabular-nums; letter-spacing: 0.02em; color: var(--led);
 }
-.turno-detalle { font-size: var(--t-xs); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: rgb(244 246 238 / 0.78); }
+.turno-detalle { font-size: var(--t-sm); font-weight: 600; letter-spacing: 0.02em; color: rgb(244 246 238 / 0.82); font-variant-numeric: tabular-nums; }
 .turno:hover:not(:disabled) { box-shadow: inset 0 0 0 2px var(--led); transform: translateY(-1px); }
 
 .turno:disabled { cursor: not-allowed; }
@@ -435,6 +435,45 @@ button.nav-enlace { border: 0; background: none; cursor: pointer; font-size: var
 .dia[aria-pressed="true"] { background: var(--tablero); border-color: var(--tablero); color: var(--cal); }
 .dia[aria-pressed="true"] .dia-nombre, .dia[aria-pressed="true"] .dia-mes { color: var(--led); }
 .dia.cerrado { opacity: 0.55; }
+.tira-cargando { width: 100%; height: 78px; }
+
+/* ---------- Reservar ---------- */
+.reservar { display: grid; gap: var(--e-5); align-items: start; padding-bottom: var(--e-8); }
+.reservar-principal { display: grid; gap: var(--e-4); min-width: 0; }
+@media (min-width: 960px) {
+  .reservar { grid-template-columns: minmax(0, 1fr) 340px; }
+  .resumen { position: sticky; top: calc(var(--alto-cabecera) + var(--e-4)); }
+}
+
+.resumen {
+  background: var(--superficie); border: 1px solid var(--borde); border-radius: var(--r-lg);
+  padding: var(--e-5); box-shadow: var(--sombra-1); display: grid; gap: var(--e-4);
+}
+.resumen-titulo { font-family: var(--f-display); font-weight: 800; font-size: var(--t-xl); text-transform: uppercase; }
+.resumen-vacio { display: flex; gap: var(--e-3); align-items: flex-start; color: var(--tinta-2); }
+.resumen-vacio [data-lucide], .resumen-vacio svg { color: var(--cesped-500); margin-top: 2px; }
+.resumen-datos { display: grid; gap: var(--e-2); margin: 0; }
+.resumen-datos div { display: flex; justify-content: space-between; gap: var(--e-3); padding-bottom: var(--e-2); border-bottom: 1px dashed var(--borde); }
+.resumen-datos dt { color: var(--tinta-3); }
+.resumen-datos dd { margin: 0; font-weight: 600; text-align: right; }
+.resumen-precio { display: flex; align-items: baseline; justify-content: space-between; }
+.resumen-precio span { font-weight: 600; color: var(--tinta-2); }
+.resumen-precio strong { font-family: var(--f-display); font-weight: 900; font-size: 2.6rem; line-height: 1; color: var(--cesped-700); }
+.resumen-nota { text-align: center; }
+.resumen-reglas { list-style: none; margin: 0; padding: var(--e-3) 0 0; border-top: 2px solid var(--superficie-2); display: grid; gap: var(--e-2); font-size: var(--t-sm); color: var(--tinta-2); }
+.resumen-reglas li { display: flex; gap: var(--e-2); align-items: flex-start; }
+.resumen-reglas [data-lucide], .resumen-reglas svg { width: 16px; height: 16px; margin-top: 3px; color: var(--cesped-500); }
+
+/* En celular, con un turno elegido el resumen queda fijo abajo */
+@media (max-width: 959px) {
+  .resumen.con-turno {
+    position: sticky; bottom: 0; z-index: 20; margin-inline: calc(var(--e-4) * -1);
+    border-radius: var(--r-lg) var(--r-lg) 0 0; box-shadow: 0 -8px 24px -8px rgb(7 20 13 / 0.3);
+    gap: var(--e-3); padding: var(--e-4);
+  }
+  .resumen.con-turno .resumen-reglas, .resumen.con-turno .resumen-titulo { display: none; }
+  .resumen.con-turno .resumen-precio strong { font-size: 2rem; }
+}
 
 /* ---------- Autenticación ---------- */
 .auth {
