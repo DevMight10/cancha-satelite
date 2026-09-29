@@ -115,3 +115,23 @@
 .leyenda-semana .l-libre { background: var(--cesped-50); box-shadow: inset 0 0 0 1px var(--cesped-100); }
 .leyenda-semana .l-pasado { background: var(--superficie-2); }
 .aviso-separado { margin-bottom: var(--e-4); }
+
+/* Bandeja de pagos */
+.lista-pagos { display: grid; gap: var(--e-3); padding-top: var(--e-4); }
+.pago-tarjeta {
+  display: grid; gap: var(--e-4); padding: var(--e-4); background: var(--superficie);
+  border: 1px solid var(--borde); border-radius: var(--r-lg); box-shadow: var(--sombra-1);
+}
+@media (min-width: 720px) { .pago-tarjeta { grid-template-columns: 180px minmax(0, 1fr); } }
+.pago-vista {
+  display: grid; place-items: center; height: 220px; overflow: hidden; border-radius: var(--r);
+  background: var(--superficie-2); color: var(--tinta-2); text-decoration: none; font-weight: 600;
+}
+.pago-vista img { width: 100%; height: 100%; object-fit: cover; }
+.pago-vista:hover img { opacity: 0.9; }
+.pago-vista-pdf { display: grid; justify-items: center; gap: var(--e-2); }
+.pago-vista svg { width: 32px; height: 32px; }
+.pago-datos { display: grid; gap: 6px; align-content: start; min-width: 0; }
+.pago-cabecera { display: flex; align-items: center; gap: var(--e-3); flex-wrap: wrap; }
+.pago-monto { font-family: var(--f-display); font-weight: 900; font-size: 2rem; line-height: 1; color: var(--cesped-700); }
+.pago-datos .acciones-fila { margin-top: var(--e-2); }

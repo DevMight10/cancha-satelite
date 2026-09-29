@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pagos · Cancha Satélite Norte</title>
+  <meta name="theme-color" content="#07140d">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="/assets/css/app.css" rel="stylesheet">
+  <link href="/assets/css/admin.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.469.0/dist/umd/lucide.min.js" defer></script>
+  <script type="module" src="/js/pages/admin/pagos.js"></script>
+</head>
+<body>
+  <header id="cabecera" class="cabecera"></header>
+  <div class="admin">
+    <nav id="admin-nav" class="admin-nav" aria-label="Administración"></nav>
+    <main class="admin-main">
+      <div class="admin-encabezado">
+        <div>
+          <h1 class="admin-titulo">Pagos</h1>
+          <p class="admin-subtitulo">Revisa cada comprobante y apruébalo o recházalo. El cliente recibe un aviso por correo.</p>
+        </div>
+      </div>
+
+      <div class="pestanas" role="tablist" aria-label="Estado de los pagos">
+        <button type="button" class="pestana" role="tab" data-estado="pendiente" aria-selected="true" id="tab-pendiente" aria-controls="lista">Por revisar</button>
+        <button type="button" class="pestana" role="tab" data-estado="aprobado" aria-selected="false" id="tab-aprobado" aria-controls="lista">Aprobados</button>
+        <button type="button" class="pestana" role="tab" data-estado="rechazado" aria-selected="false" id="tab-rechazado" aria-controls="lista">Rechazados</button>
+      </div>
+
+      <section id="lista" class="lista-pagos" role="tabpanel" aria-live="polite">
+        <div class="esqueleto bloque-cargando"></div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
