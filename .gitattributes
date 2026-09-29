@@ -1,0 +1,8 @@
+# Finales de línea uniformes (LF) en todas las computadoras
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary

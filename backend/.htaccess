@@ -1,0 +1,3 @@
+# Nadie puede abrir desde el navegador el código, el .env ni los archivos subidos.
+# Solo la carpeta public/ es accesible (tiene su propio .htaccess).
+Require all denied

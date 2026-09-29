@@ -1,0 +1,20 @@
+{
+    "name": "cancha-satelite/backend",
+    "description": "API REST del sistema de reservas y pagos de la cancha deportiva de Satélite Norte",
+    "type": "project",
+    "license": "proprietary",
+    "require": {
+        "php": ">=8.1",
+        "ext-json": "*",
+        "ext-pdo": "*",
+        "ext-pdo_mysql": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true
+    }
+}

@@ -1,0 +1,17 @@
+# Dependencias de Composer
+backend/vendor/
+
+# Credenciales
+backend/.env
+
+# Archivos generados en ejecución
+backend/storage/logs/*
+!backend/storage/logs/.gitkeep
+backend/storage/uploads/*
+!backend/storage/uploads/.gitkeep
+
+# Editor / sistema
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store

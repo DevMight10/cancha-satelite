@@ -1,0 +1,18 @@
+# Un solo dominio para frontend y backend:
+#   /api/...  -> backend/public/index.php  (API en PHP)
+#   /...      -> frontend/...              (HTML, CSS, JS)
+Options -Indexes
+DirectoryIndex index.html
+
+RewriteEngine On
+
+# 1. API
+RewriteRule ^api(/.*)?$ backend/public/index.php [QSA,END]
+
+# 2. Nunca exponer carpetas internas ni archivos ocultos (.env, .git, ...)
+RewriteRule ^(backend|database|docs)(/|$) - [F,END]
+RewriteRule (^|/)\. - [F,END]
+
+# 3. Todo lo demás se sirve desde frontend/
+RewriteRule ^frontend/ - [END]
+RewriteRule ^(.*)$ frontend/$1 [END]

@@ -1,0 +1,7 @@
+Require all granted
+Options -Indexes
+
+# Todas las peticiones pasan por index.php (Front Controller)
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ index.php [QSA,L]
