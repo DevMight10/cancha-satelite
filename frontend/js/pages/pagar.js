@@ -143,7 +143,7 @@ function medioDePago() {
 
   return html`
     <div class="panel pago">
-      <h2 class="panel-titulo">1. Paga ${dinero(reserva.precio)}</h2>
+      <h2 class="paso-pago"><span>1</span>Paga ${dinero(reserva.precio)}</h2>
       <div class="pestanas" role="tablist" aria-label="Medio de pago">
         ${metodos.map((m, i) => html`
           <button type="button" class="pestana" role="tab" id="tab-${m}" aria-controls="panel-${m}" aria-selected="${i === 0}" data-metodo="${m}">${METODOS_PAGO[m]}</button>`)}
@@ -151,7 +151,7 @@ function medioDePago() {
       ${metodos.map((m, i) => html`
         <div class="panel-metodo" role="tabpanel" id="panel-${m}" aria-labelledby="tab-${m}" ${i === 0 ? '' : 'hidden'}>${paneles[m]()}</div>`)}
 
-      <h2 class="panel-titulo">2. Envía el comprobante</h2>
+      <h2 class="paso-pago"><span>2</span>Envía el comprobante</h2>
       <form id="form-pago" class="formulario" novalidate>
         <input type="hidden" name="metodo" value="${metodos[0]}">
         <div class="campo">

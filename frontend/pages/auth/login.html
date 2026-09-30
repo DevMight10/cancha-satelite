@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Iniciar sesión · Cancha Satélite Norte</title>
-  <meta name="theme-color" content="#07140d">
+  <meta name="theme-color" content="#0b0d0c">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="/assets/css/app.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.469.0/dist/umd/lucide.min.js" defer></script>
   <script type="module" src="/js/pages/login.js"></script>
@@ -16,6 +16,10 @@
   <header id="cabecera" class="cabecera"></header>
 
   <main class="auth">
+    <div class="auth-cancha"><div id="auth-cancha-fondo"></div>
+      <div class="auth-cancha-texto"><h2>Tu cancha,<br><span>a un toque.</span></h2><p>Mira los horarios libres, reserva y paga con QR, Tigo Money o transferencia.</p></div>
+    </div>
+    <div class="auth-formulario">
     <section class="auth-tarjeta" aria-labelledby="titulo">
       <h1 id="titulo">Entrar</h1>
       <p class="subtitulo">Reserva tu hora y sigue tus partidos.</p>
@@ -42,6 +46,7 @@
 
       <p class="auth-pie">¿Primera vez? <a href="/pages/auth/registro.html">Crea tu cuenta</a></p>
     </section>
+    </div>
   </main>
 </body>
 </html>

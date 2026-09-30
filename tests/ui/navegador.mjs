@@ -143,6 +143,15 @@ export async function abrirNavegador({ ancho = 1280, alto = 900 } = {}) {
       await enviar('Page.setDownloadBehavior', { behavior: 'allow', downloadPath: carpeta });
     },
 
+    /** Mueve el mouse real al centro del elemento (activa :hover). */
+    async pasarMouse(selector) {
+      const { x, y } = await nav.evaluar(`(() => { const el = document.querySelector(${JSON.stringify(selector)});
+        el.scrollIntoView({ block: 'center' }); const r = el.getBoundingClientRect();
+        return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; })()`);
+      await enviar('Input.dispatchMouseEvent', { type: 'mouseMoved', x, y });
+      await esperar(250);
+    },
+
     texto: (selector) => nav.evaluar(`document.querySelector(${JSON.stringify(selector)})?.innerText ?? null`),
 
     async viewport(anchoV, altoV, movil = false) {
@@ -199,6 +208,24 @@ export function seccion(titulo) {
 export function terminar() {
   console.log(`\n${pasadas} pasadas, ${fallidas} fallidas`);
   process.exitCode = fallidas ? 1 : 0;
+}
+
+/**
+ * En la página Reservar, elige en el calendario el día con horarios libres número `indice`
+ * (0 = el primero), avanzando de mes con la flecha si hace falta. Devuelve la fecha elegida.
+ */
+export async function elegirDia(nav, indice = 0) {
+  const fecha = await nav.evaluar(`fetch('/api/disponibilidad/dias').then(r => r.json())
+    .then(j => (j.data ?? j).filter(d => d.abierto && d.libres > 0)[${indice}]?.fecha)`);
+  if (!fecha) throw new Error(`no hay un día disponible número ${indice}`);
+  await nav.esperarQue(`document.querySelector('.cal-dia')`, { descripcion: 'calendario' });
+  for (let i = 0; i < 3; i++) {
+    if (await nav.evaluar(`Boolean(document.querySelector('.cal-dia[data-fecha="${fecha}"]'))`)) break;
+    await nav.clic('[data-mes="1"]');
+  }
+  await nav.clic(`.cal-dia[data-fecha="${fecha}"]`);
+  await nav.esperarQue(`document.querySelector('.cal-dia[data-fecha="${fecha}"]')?.getAttribute('aria-pressed') === 'true'`, { descripcion: `día ${fecha} elegido` });
+  return fecha;
 }
 
 /** Lee una variable comentada de backend/.env (credenciales de desarrollo). */

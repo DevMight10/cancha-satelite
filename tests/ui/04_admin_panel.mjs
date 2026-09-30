@@ -25,7 +25,7 @@ try {
     await nav.escribir('#password', credencial('ADMIN_DEV_PASSWORD'));
     await nav.clic('#form-login [type=submit]');
     await nav.esperarUrl('/pages/admin/');
-    await nav.esperarQue(`document.querySelectorAll('.agenda-fila').length > 0`, { descripcion: 'agenda cargada' });
+    await nav.esperarQue(`document.querySelectorAll('.crono-fila').length === 7`, { descripcion: 'cronograma cargado' });
   });
 
   seccion('Panel');
@@ -33,10 +33,10 @@ try {
     const resumen = await nav.texto('#resumen');
     for (const t of ['RESERVAS', 'CONFIRMADAS', 'POR COBRAR', 'COBRADO', 'TURNOS LIBRES']) afirmar(resumen.toUpperCase().includes(t), `falta ${t}`);
     const enlaces = await nav.evaluar(`[...document.querySelectorAll('.admin-enlace')].map(a => a.querySelector('span').textContent)`);
-    afirmar(enlaces.join() === 'Panel,Reservas,Pagos,Configuración,Reportes', `navegación: ${enlaces}`);
+    afirmar(enlaces.join() === 'Cronograma,Reservas,Pagos,Configuración,Reportes', `navegación: ${enlaces}`);
   });
 
-  await paso('navegar a un día con reservas muestra el nombre de cada cliente', async () => {
+  await paso('el cronograma y la agenda muestran el nombre de cada cliente', async () => {
     const conReservas = await nav.evaluar(`(async () => {
       for (let i = 0; i < 14; i++) {
         const d = new Date(); d.setDate(d.getDate() + i); const f = d.toISOString().slice(0, 10);
@@ -47,22 +47,22 @@ try {
     })()`);
     afirmar(conReservas, 'no hay reservas en los próximos 14 días');
     await nav.escribir('#fecha', conReservas);
-    await nav.esperarQue(`document.querySelector('.agenda-fila:not(.libre) .agenda-cliente strong')`, { descripcion: 'fila con cliente' });
+    await nav.esperarQue(`document.querySelector('.crono-res span') && document.querySelector('.agenda-fila .agenda-cliente strong')`, { descripcion: 'bloque y fila con cliente' });
     await nav.captura('04-admin-panel');
   });
 
-  await paso('la grilla de la semana tiene 7 días y permite cambiar de día', async () => {
-    const dias = await nav.evaluar(`document.querySelectorAll('.semana thead [data-fecha]').length`);
+  await paso('el cronograma tiene 7 días y tocar un día cambia la agenda', async () => {
+    const dias = await nav.evaluar(`document.querySelectorAll('.crono-dia').length`);
     afirmar(dias === 7, `días: ${dias}`);
     const antes = await nav.evaluar(`document.querySelector('#fecha').value`);
-    await nav.clic('.semana thead [data-fecha]:not([aria-pressed="true"])');
+    await nav.clic('.crono-dia:not([aria-pressed="true"])');
     await nav.esperarQue(`document.querySelector('#fecha').value !== ${JSON.stringify(antes)}`, { descripcion: 'cambio de día' });
   });
 
   await paso('en celular la navegación se vuelve una barra deslizable sin scroll horizontal de la página', async () => {
     await nav.viewport(390, 844, true);
     await nav.ir('/pages/admin/index.html');
-    await nav.esperarQue(`document.querySelectorAll('.agenda-fila').length > 0`);
+    await nav.esperarQue(`document.querySelectorAll('.crono-fila').length === 7`);
     const desborde = await nav.evaluar('document.documentElement.scrollWidth - window.innerWidth');
     afirmar(desborde <= 0, `hay ${desborde}px de scroll horizontal`);
     await nav.captura('04-admin-panel-celular', { completa: false });

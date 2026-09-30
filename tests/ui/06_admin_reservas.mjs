@@ -19,11 +19,13 @@ try {
   });
 
   seccion('Reserva presencial desde el panel');
-  await paso('"Registrar" en un turno libre del panel abre el formulario con día y hora elegidos', async () => {
+  await paso('tocar un espacio libre del cronograma abre el formulario con día y hora elegidos', async () => {
     await nav.escribir('#fecha', await nav.evaluar(`(() => { const d = new Date(); d.setDate(d.getDate() + 5); return d.toISOString().slice(0, 10); })()`));
-    await nav.esperarQue(`document.querySelector('.agenda-fila.libre a')`, { descripcion: 'turno libre' });
-    const esperado = await nav.evaluar(`new URL(document.querySelector('.agenda-fila.libre a').href).searchParams.get('hora')`);
-    await nav.clic('.agenda-fila.libre a');
+    // La fecha puede caer en otra semana: esperar a que el cronograma de esa semana esté pintado
+    const enlace = `[...document.querySelectorAll('.crono-libre')].find(a => a.href.includes('fecha=' + document.querySelector('#fecha').value))`;
+    await nav.esperarQue(`document.querySelector('.crono-dia[aria-pressed="true"]')?.dataset.fecha === document.querySelector('#fecha').value && ${enlace}`, { descripcion: 'espacio libre del día' });
+    const esperado = await nav.evaluar(`new URL(${enlace}.href).searchParams.get('hora')`);
+    await nav.evaluar(`${enlace}.click()`);
     await nav.esperarUrl('/pages/admin/reservas.html');
     await nav.esperarQue(`!document.querySelector('#nueva').hidden && document.querySelector('#n-hora').value === ${JSON.stringify(esperado)}`, { descripcion: 'formulario con hora' });
   });

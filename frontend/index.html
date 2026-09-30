@@ -4,64 +4,75 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Cancha Satélite Norte · Reserva y paga tu hora en línea</title>
-  <meta name="description" content="Mira los horarios libres de la cancha de Satélite Norte, reserva en segundos y paga con QR Simple, Tigo Money o transferencia.">
-  <meta name="theme-color" content="#07140d">
+  <meta name="description" content="Elige el día y la hora, reserva la cancha de Satélite Norte y paga con QR Simple, Tigo Money o transferencia.">
+  <meta name="theme-color" content="#0b0d0c">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="/assets/css/app.css" rel="stylesheet">
   <link href="/assets/css/inicio.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.469.0/dist/umd/lucide.min.js" defer></script>
   <script type="module" src="/js/pages/inicio.js"></script>
 </head>
 <body>
-  <header id="cabecera" class="cabecera"></header>
-
   <main>
-    <section class="portada sobre-oscuro" aria-labelledby="titulo-portada">
-      <div class="contenedor portada-grilla">
-        <div class="portada-texto">
-          <h1 id="titulo-portada">Reserva tu hora en la cancha</h1>
-          <p class="portada-bajada">Mira qué horarios quedan libres, reserva en segundos y paga con <strong>QR Simple</strong>, <strong>Tigo Money</strong> o transferencia. Sin llamadas ni cuaderno.</p>
-          <div class="portada-acciones">
-            <a class="btn btn-led" href="/pages/reservar.html"><i data-lucide="calendar-plus"></i>Reservar ahora</a>
-            <a class="btn btn-contorno-claro" href="#precios">Ver precios</a>
-          </div>
-        </div>
+    <section class="portada" aria-labelledby="titulo-portada">
+      <div id="portada-fondo" class="portada-fondo" aria-hidden="true"></div>
+      <header id="cabecera" class="cabecera sobre-portada"></header>
+      <div class="contenedor portada-contenido">
+        <h1 id="titulo-portada">Juega hoy en<br><span>Satélite Norte</span></h1>
+        <p class="portada-bajada">Elige el día y la hora, confirma y paga con QR. Tu cancha queda reservada en menos de un minuto.</p>
 
-        <div class="portada-marcador">
-          <div class="marcador" id="marcador-hoy" aria-live="polite"></div>
-          <p class="marcador-nota">Disponibilidad en vivo · toca una hora libre para reservarla</p>
-        </div>
+        <form class="buscador" id="buscador" aria-label="Buscar turnos libres">
+          <label class="buscador-campo">
+            <span>Día</span>
+            <select id="b-dia" name="fecha" aria-label="Día"></select>
+          </label>
+          <label class="buscador-campo">
+            <span>Horario</span>
+            <select id="b-franja" name="franja" aria-label="Horario">
+              <option value="todo">Todo el día</option>
+              <option value="manana">Mañana (hasta 12 h)</option>
+              <option value="tarde">Tarde (12–18 h)</option>
+              <option value="noche">Noche (desde 18 h)</option>
+            </select>
+          </label>
+          <div class="buscador-campo fijo"><span>Duración</span><b id="b-duracion">1 hora</b></div>
+          <button type="submit" class="btn btn-primario buscador-boton"><i data-lucide="search"></i>Ver turnos</button>
+        </form>
       </div>
     </section>
 
-    <section class="contenedor seccion" aria-labelledby="titulo-como">
-      <h2 class="titulo-seccion" id="titulo-como">Así de simple</h2>
-      <ol class="jugada">
-        <li>
-          <span class="jugada-icono"><i data-lucide="calendar-search"></i></span>
-          <h3>Elige tu hora</h3>
-          <p>El marcador muestra los horarios libres de cada día con su precio.</p>
-        </li>
-        <li>
-          <span class="jugada-icono"><i data-lucide="ticket-check"></i></span>
-          <h3>Reserva</h3>
-          <p>Con tu cuenta, el horario queda apartado para ti mientras pagas.</p>
-        </li>
-        <li>
-          <span class="jugada-icono"><i data-lucide="qr-code"></i></span>
-          <h3>Paga y juega</h3>
-          <p>Paga con QR, Tigo Money o transferencia, envía el comprobante y recibe la confirmación por correo.</p>
-        </li>
+    <section class="contenedor seccion" aria-labelledby="titulo-hoy">
+      <div class="seccion-cabecera">
+        <div>
+          <h2 class="titulo-seccion" id="titulo-hoy">Hoy en la cancha</h2>
+          <p class="seccion-bajada" id="bajada-hoy">Disponibilidad en vivo · toca un bloque verde para reservarlo</p>
+        </div>
+        <a class="btn btn-negro" href="/pages/reservar.html">Ver otros días<i data-lucide="arrow-right"></i></a>
+      </div>
+      <div class="marcador" id="marcador-hoy" aria-live="polite"></div>
+    </section>
+
+    <section class="contenedor seccion como" aria-labelledby="titulo-como">
+      <h2 class="titulo-seccion" id="titulo-como">Cómo reservar</h2>
+      <ol class="pasos">
+        <li><span class="paso-n">1</span><div><h3>Elige día y hora</h3><p>Los bloques verdes son los horarios libres, con su precio.</p></div></li>
+        <li><span class="paso-n">2</span><div><h3>Confirma</h3><p>Con tu cuenta, el turno queda apartado a tu nombre.</p></div></li>
+        <li><span class="paso-n">3</span><div><h3>Paga y juega</h3><p>QR, Tigo Money o transferencia. Te confirmamos por correo.</p></div></li>
       </ol>
     </section>
 
-    <section class="precios-seccion sobre-oscuro" id="precios" aria-labelledby="titulo-precios">
+    <section class="precios" id="precios" aria-labelledby="titulo-precios">
       <div class="contenedor">
-        <h2 class="titulo-seccion" id="titulo-precios">Precios y horarios</h2>
+        <div class="seccion-cabecera">
+          <div>
+            <h2 class="titulo-seccion" id="titulo-precios">Precios y horarios</h2>
+            <p class="seccion-bajada" id="nota-precios"></p>
+          </div>
+        </div>
         <div class="precios-grilla">
-          <div class="tabla-precios" id="tabla-precios" aria-live="polite"></div>
+          <div class="tarifas" id="tabla-precios" aria-live="polite"></div>
           <div class="horario-atencion" id="horario-atencion"></div>
         </div>
       </div>
@@ -75,17 +86,17 @@
       <div class="contacto" id="contacto"></div>
     </section>
 
-    <section class="cierre sobre-oscuro" aria-labelledby="titulo-cierre">
+    <section class="cierre" aria-labelledby="titulo-cierre">
       <div class="contenedor cierre-contenido">
-        <h2 id="titulo-cierre">¿Armaste el equipo?</h2>
-        <a class="btn btn-led" href="/pages/reservar.html"><i data-lucide="calendar-plus"></i>Ver horarios libres</a>
+        <h2 id="titulo-cierre">¿Ya armaste el equipo?</h2>
+        <a class="btn btn-negro btn-grande" href="/pages/reservar.html"><i data-lucide="calendar-plus"></i>Reservar ahora</a>
       </div>
     </section>
   </main>
 
   <footer class="pie">
     <div class="contenedor">
-      <span>Cancha Satélite Norte · Reservas y pagos en línea</span>
+      <span class="marca" id="marca-pie">Cancha Satélite Norte</span>
       <span>Proyecto de innovación tecnológica · U.E. Bolivariana Juancito Pinto · 2026</span>
     </div>
   </footer>

@@ -9,7 +9,7 @@ await iniciarAdmin('reportes');
 
 const DIAS = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
 const INICIALES = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
-const COLOR = { barra: '#15803d', barraHover: '#14532d', grilla: '#e9ece3', texto: '#56625a', tinta: '#0f1a14' };
+const COLOR = { barra: '#1f8a3b', barraHover: '#0b0d0c', grilla: '#e3e6e4', texto: '#5b605d', tinta: '#0b0d0c' };
 const filtros = $('#filtros');
 const graficos = {};
 let reporte;
@@ -99,7 +99,7 @@ function graficoBarras(id, etiquetas, valores, detalle) {
   if (!window.Chart) return;
   graficos[id]?.destroy();
   const Chart = window.Chart;
-  Chart.defaults.font.family = "'Barlow', system-ui, sans-serif";
+  Chart.defaults.font.family = "'Rubik', system-ui, sans-serif";
   Chart.defaults.color = COLOR.texto;
 
   graficos[id] = new Chart(document.getElementById(`grafico-${id}`), {
@@ -122,7 +122,7 @@ function graficoBarras(id, etiquetas, valores, detalle) {
       plugins: {
         legend: { display: false },
         tooltip: {
-          backgroundColor: '#07140d',
+          backgroundColor: '#0b0d0c',
           titleColor: '#ffffff',
           bodyColor: '#f4f6ee',
           titleFont: { weight: '700', size: 15 },
@@ -246,12 +246,12 @@ async function exportarPdf(boton) {
     await cargarScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js');
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF({ unit: 'pt', format: 'a4' });
-    const verde = [21, 128, 61];
-    const tablero = [7, 20, 13];
+    const verde = [31, 138, 59];
+    const tablero = [11, 13, 12];
 
     pdf.setFillColor(...tablero);
     pdf.rect(0, 0, 595, 70, 'F');
-    pdf.setTextColor(255, 178, 63);
+    pdf.setTextColor(34, 197, 94);
     pdf.setFont('helvetica', 'bold');
     pdf.setFontSize(18);
     pdf.text('CANCHA SATÉLITE NORTE', 40, 38);

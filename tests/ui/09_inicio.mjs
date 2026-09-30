@@ -12,7 +12,7 @@ try {
   });
 
   await paso('muestra precios y horario de atención reales', async () => {
-    const precios = await nav.evaluar(`document.querySelectorAll('.lista-precios li').length`);
+    const precios = await nav.evaluar(`document.querySelectorAll('.tarifa').length`);
     afirmar(precios > 0, 'no hay precios');
     const dias = await nav.evaluar(`document.querySelectorAll('.horario-atencion dl div').length`);
     afirmar(dias === 7, `días del horario: ${dias}`);
@@ -24,7 +24,7 @@ try {
     await nav.clic('#marcador-hoy .turno.libre');
     await nav.esperarUrl('/pages/reservar.html');
     await nav.esperarQue(`document.querySelector('.turno[aria-pressed="true"] .turno-hora')?.textContent === ${JSON.stringify(horaElegida)}`, { descripcion: 'hora preseleccionada' });
-    const boton = await nav.texto('.resumen .btn');
+    const boton = await nav.texto('#resumen a[href*="login"]');
     afirmar(boton.includes('Inicia sesión'), `botón: ${boton}`);
   });
 

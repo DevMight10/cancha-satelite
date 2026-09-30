@@ -2,7 +2,7 @@
 // Ejecutar: node tests/ui/02_pago.mjs
 import { execFileSync } from 'node:child_process';
 import { join } from 'node:path';
-import { CAPTURAS, abrirNavegador, afirmar, paso, seccion, terminar } from './navegador.mjs';
+import { CAPTURAS, abrirNavegador, afirmar, elegirDia, paso, seccion, terminar } from './navegador.mjs';
 import { mkdirSync } from 'node:fs';
 
 const PHP = process.env.PHP ?? 'C:/laragon/bin/php/php-8.3.26-Win32-vs16-x64/php.exe';
@@ -23,7 +23,7 @@ try {
     await nav.escribir('#password', 'clave-segura-1');
     await nav.clic('#form-registro [type=submit]');
     await nav.esperarUrl('/pages/reservar.html');
-    await nav.clic('.dia:nth-child(4)');
+    await elegirDia(nav, 2);
     await nav.esperarQue(`document.querySelector('.turno.libre')`, { descripcion: 'turnos libres' });
     await nav.clic('.turno.libre');
     await nav.clic('#confirmar');

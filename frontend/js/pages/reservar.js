@@ -1,67 +1,100 @@
 import { publicoApi } from '../api/publicoApi.js';
 import { reservasApi } from '../api/reservasApi.js';
+import { mesDe, primerDisponibleDelMes, renderCalendario } from '../components/calendario.js';
 import { manejarError } from '../components/formulario.js';
-import { marcadorCargando, renderMarcador } from '../components/marcador.js';
-import { renderTiraDias } from '../components/tiraDias.js';
+import { horariosCargando, renderHorarios } from '../components/horarios.js';
 import { toast } from '../components/toast.js';
 import { RUTAS } from '../config.js';
 import { iniciarPagina } from '../core/pagina.js';
 import { $, html, pintar } from '../utils/dom.js';
-import { dinero, fechaLarga, hora, rangoHoras } from '../utils/formato.js';
+import { dinero, fechaCorta, fechaLarga, fechaRelativa, hora, rangoHoras } from '../utils/formato.js';
 
 const usuario = await iniciarPagina({ acceso: 'publico', activa: 'reservar' });
 
 const parametros = new URLSearchParams(location.search);
 const estado = {
-  info: null,
   dias: [],
+  dia: null,
   fecha: parametros.get('fecha'),
+  mes: null,
   turno: null,
-  horaPedida: parametros.get('hora'), // al volver del login
+  horaPedida: parametros.get('hora'),     // al volver del login o desde la portada
+  franja: parametros.get('franja'),       // desde el buscador de la portada
 };
 
-const tira = $('#tira-dias');
-const marcador = $('#marcador');
+const horarios = $('#marcador');
 const resumen = $('#resumen');
 
+let info;
 try {
-  [estado.info, estado.dias] = await Promise.all([publicoApi.info(), publicoApi.dias()]);
+  [info, estado.dias] = await Promise.all([publicoApi.info(), publicoApi.dias()]);
 } catch (error) {
   manejarError(error);
   throw error;
 }
+const reglas = info.reglas;
+$('#reglas').textContent = `Turnos de ${reglas.duracion_turno} minutos. Tienes ${reglas.minutos_pago} minutos para pagar con QR, Tigo Money o transferencia.`;
 
-const reglas = estado.info.reglas;
-$('#reglas').textContent =
-  `Turnos de ${reglas.duracion_turno} minutos. Después de reservar tienes ${reglas.minutos_pago} minutos para pagar con QR, Tigo Money o transferencia.`;
-
-if (!estado.dias.some((d) => d.fecha === estado.fecha)) {
+if (!estado.dias.some((d) => d.fecha === estado.fecha && d.abierto && d.libres > 0)) {
   estado.fecha = (estado.dias.find((d) => d.abierto && d.libres > 0) ?? estado.dias[0]).fecha;
 }
+estado.mes = mesDe(estado.fecha);
 
-renderTiraDias(tira, estado.dias, estado.fecha, (fecha) => {
-  estado.fecha = fecha;
-  estado.turno = null;
-  cargarDia();
-});
+pintarCalendario();
 await cargarDia();
 
+function pintarCalendario() {
+  renderCalendario($('#calendario'), {
+    dias: estado.dias,
+    mes: estado.mes,
+    seleccionada: estado.fecha,
+    alElegir: (fecha) => {
+      estado.fecha = fecha;
+      estado.turno = null;
+      pintarCalendario();
+      cargarDia();
+      // En celular el calendario ocupa la pantalla: bajamos a los horarios del día elegido.
+      if (matchMedia('(max-width: 899px)').matches) $('.panel-horarios').scrollIntoView({ behavior: 'smooth' });
+    },
+    alCambiarMes: (mes) => {
+      estado.mes = mes;
+      const disponible = primerDisponibleDelMes(estado.dias, mes);
+      if (disponible && mesDe(estado.fecha) !== mes) {
+        estado.fecha = disponible;
+        estado.turno = null;
+        cargarDia();
+      }
+      pintarCalendario();
+    },
+  });
+}
+
 async function cargarDia() {
-  marcadorCargando(marcador, estado.fecha);
+  $('#titulo-dia').textContent = fechaRelativa(estado.fecha) === 'Hoy' ? `Hoy, ${fechaLarga(estado.fecha)}` : fechaLarga(estado.fecha);
+  $('#libres-dia').hidden = true;
+  horariosCargando(horarios);
   renderResumen();
   try {
-    const dia = await publicoApi.disponibilidad(estado.fecha);
+    estado.dia = await publicoApi.disponibilidad(estado.fecha);
     if (estado.horaPedida) {
-      estado.turno = dia.turnos.find((t) => hora(t.hora_inicio) === estado.horaPedida && t.estado === 'libre') ?? null;
+      estado.turno = estado.dia.turnos.find((t) => hora(t.hora_inicio) === estado.horaPedida && t.estado === 'libre') ?? null;
       estado.horaPedida = null;
     }
-    renderMarcador(marcador, dia, {
+    const libres = estado.dia.turnos.filter((t) => t.estado === 'libre').length;
+    $('#libres-dia').textContent = `${libres} ${libres === 1 ? 'horario libre' : 'horarios libres'}`;
+    $('#libres-dia').hidden = !estado.dia.abierto;
+
+    renderHorarios(horarios, estado.dia, {
       seleccion: estado.turno?.hora_inicio,
       alSeleccionar: (turno) => {
         estado.turno = turno;
         renderResumen();
       },
     });
+    if (estado.franja) {
+      $(`#grupo-${estado.franja}`)?.scrollIntoView({ block: 'center' });
+      estado.franja = null;
+    }
     renderResumen();
   } catch (error) {
     manejarError(error);
@@ -77,48 +110,29 @@ function actualizarUrl() {
 function renderResumen() {
   const t = estado.turno;
   actualizarUrl();
+  document.body.classList.toggle('con-turno', Boolean(t));
 
   if (!t) {
-    resumen.classList.remove('con-turno');
-    pintar(resumen, html`
-      <h2 class="resumen-titulo" id="resumen-titulo">Tu reserva</h2>
-      <div class="resumen-vacio">
-        <i data-lucide="mouse-pointer-click"></i>
-        <p>Toca un horario <strong>libre</strong> del marcador para ver el precio y reservarlo.</p>
-      </div>
-      ${reglasHtml()}`);
+    pintar(resumen, html`<p class="resumen-pista"><i data-lucide="mouse-pointer-click"></i>Elige un horario libre para continuar.</p>`);
     return;
   }
 
   const volver = encodeURIComponent(`${RUTAS.reservar}?fecha=${estado.fecha}&hora=${hora(t.hora_inicio)}`);
-  resumen.classList.add('con-turno');
   pintar(resumen, html`
-    <h2 class="resumen-titulo" id="resumen-titulo">Tu reserva</h2>
-    <dl class="resumen-datos">
-      <div><dt>Día</dt><dd>${fechaLarga(estado.fecha)}</dd></div>
-      <div><dt>Hora</dt><dd class="num">${rangoHoras(t.hora_inicio, t.hora_fin)}</dd></div>
-    </dl>
     <div class="resumen-precio">
-      <span>Total</span>
+      <span class="resumen-titulo">
+        <span class="texto-largo">${fechaLarga(estado.fecha)}</span><span class="texto-corto">${fechaCorta(estado.fecha)}</span>
+        · ${rangoHoras(t.hora_inicio, t.hora_fin)}</span>
       <strong class="num">${dinero(t.precio)}</strong>
     </div>
-    ${usuario
-      ? html`<button type="button" class="btn btn-primario btn-bloque" id="confirmar">
-          <i data-lucide="check"></i>Confirmar reserva</button>`
-      : html`<a class="btn btn-primario btn-bloque" href="${RUTAS.login}?volver=${volver}">
-          <i data-lucide="log-in"></i>Inicia sesión para reservar</a>
-        <p class="texto-sm texto-suave resumen-nota">¿No tienes cuenta? <a href="${RUTAS.registro}?volver=${volver}">Créala en un minuto</a>.</p>`}
-    ${reglasHtml()}`);
+    <div class="acciones-resumen">
+      ${usuario
+        ? html`<button type="button" class="btn btn-primario btn-grande" id="confirmar"><i data-lucide="check"></i><span>Confirmar<span class="texto-largo"> reserva</span></span></button>`
+        : html`<a class="btn btn-primario btn-grande" href="${RUTAS.login}?volver=${volver}"><i data-lucide="log-in"></i><span class="texto-largo">Inicia sesión para reservar</span><span class="texto-corto">Ingresa y reserva</span></a>
+               <a class="enlace-registro" href="${RUTAS.registro}?volver=${volver}">¿No tienes cuenta? Créala</a>`}
+    </div>`);
 
   $('#confirmar')?.addEventListener('click', confirmar);
-}
-
-function reglasHtml() {
-  return html`
-    <ul class="resumen-reglas">
-      <li><i data-lucide="timer"></i>Tienes ${reglas.minutos_pago} min para pagar; si no, el horario se libera.</li>
-      <li><i data-lucide="undo-2"></i>Puedes cancelar hasta ${reglas.horas_cancelacion} h antes del partido.</li>
-    </ul>`;
 }
 
 async function confirmar(evento) {

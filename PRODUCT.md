@@ -41,7 +41,7 @@ Es la agenda real de UNA cancha de barrio concreta, con sus horarios, sus precio
 ## Brand Commitments
 
 - Nombre: **Cancha Satélite Norte**.
-- Dirección visual elegida por el usuario: **"Marcador de cancha"** (césped, líneas de cal, horarios como tablero de estadio).
+- Dirección visual elegida por el usuario: **Propuesta B "La cancha al centro"** (verde césped, blanco y negro; tono deportivo de app de reservas, no de tienda).
 
 ## Evidence on Hand
 

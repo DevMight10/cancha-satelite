@@ -3,7 +3,7 @@
 import { execFileSync } from 'node:child_process';
 import { mkdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { CAPTURAS, abrirNavegador, afirmar, credencial, paso, seccion, terminar } from './navegador.mjs';
+import { CAPTURAS, abrirNavegador, afirmar, credencial, elegirDia, paso, seccion, terminar } from './navegador.mjs';
 
 const PHP = process.env.PHP ?? 'C:/laragon/bin/php/php-8.3.26-Win32-vs16-x64/php.exe';
 mkdirSync(CAPTURAS, { recursive: true });
@@ -45,7 +45,7 @@ try {
     await nav.escribir('#password', 'clave-segura-1');
     await nav.clic('#form-registro [type=submit]');
     await nav.esperarUrl('/pages/reservar.html');
-    await nav.clic('.dia:nth-child(6)');
+    await elegirDia(nav, 4);
     await nav.esperarQue(`document.querySelector('.turno.libre')`);
     await nav.clic('.turno.libre');
     await nav.clic('#confirmar');

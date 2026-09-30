@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Panel · Cancha Satélite Norte</title>
-  <meta name="theme-color" content="#07140d">
+  <title>Cronograma · Cancha Satélite Norte</title>
+  <meta name="theme-color" content="#0b0d0c">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="/assets/css/app.css" rel="stylesheet">
   <link href="/assets/css/admin.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.469.0/dist/umd/lucide.min.js" defer></script>
@@ -20,30 +20,33 @@
     <main class="admin-main">
       <div class="admin-encabezado">
         <div>
-          <h1 class="admin-titulo">Panel</h1>
-          <p class="admin-subtitulo" id="fecha-texto">&nbsp;</p>
+          <h1 class="admin-titulo">Cronograma</h1>
+          <p class="admin-subtitulo" id="rango-semana">&nbsp;</p>
         </div>
         <div class="selector-fecha">
-          <button type="button" class="btn btn-icono" id="dia-anterior" aria-label="Día anterior"><i data-lucide="chevron-left"></i></button>
-          <input type="date" class="control" id="fecha" aria-label="Fecha">
-          <button type="button" class="btn btn-icono" id="dia-siguiente" aria-label="Día siguiente"><i data-lucide="chevron-right"></i></button>
-          <button type="button" class="btn" id="hoy">Hoy</button>
+          <button type="button" class="btn btn-icono" id="semana-anterior" aria-label="Semana anterior"><i data-lucide="chevron-left"></i></button>
+          <button type="button" class="btn" id="hoy">Esta semana</button>
+          <button type="button" class="btn btn-icono" id="semana-siguiente" aria-label="Semana siguiente"><i data-lucide="chevron-right"></i></button>
+          <input type="date" class="control" id="fecha" aria-label="Ir a una fecha">
         </div>
       </div>
 
       <div id="aviso-pagos"></div>
       <dl class="resumen-dia" id="resumen" aria-live="polite"></dl>
 
-      <div class="grid-panel">
-        <section aria-labelledby="titulo-agenda">
-          <h2 class="bloque-titulo" id="titulo-agenda">Agenda del día</h2>
-          <div class="agenda" id="agenda"><div class="esqueleto bloque-cargando"></div></div>
-        </section>
-        <section aria-labelledby="titulo-semana">
-          <h2 class="bloque-titulo" id="titulo-semana">Ocupación de la semana</h2>
-          <div class="semana-envoltura" id="semana"><div class="esqueleto bloque-cargando"></div></div>
-        </section>
-      </div>
+      <section class="crono" aria-labelledby="titulo-crono">
+        <h2 class="visualmente-oculto" id="titulo-crono">Reservas de la semana</h2>
+        <div id="cronograma"><div class="esqueleto bloque-cargando"></div></div>
+        <div class="crono-leyenda" aria-hidden="true">
+          <span><i class="l-ok"></i>Confirmada</span><span><i class="l-pend"></i>Por cobrar / en revisión</span>
+          <span><i class="l-libre"></i>Libre (toca para registrar)</span><span><i class="l-cerrado"></i>Cerrado</span>
+        </div>
+      </section>
+
+      <section class="detalle-dia" aria-labelledby="titulo-agenda">
+        <h2 class="bloque-titulo" id="titulo-agenda">Agenda del día</h2>
+        <div class="agenda" id="agenda"></div>
+      </section>
     </main>
   </div>
 </body>

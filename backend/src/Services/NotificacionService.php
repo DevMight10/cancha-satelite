@@ -127,21 +127,21 @@ class NotificacionService
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f3f4ef;padding:24px 12px">
     <tr><td align="center">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#ffffff;border-radius:10px;overflow:hidden">
-        <tr><td style="background:#07140d;padding:18px 24px;color:#f4f6ee;font-weight:bold;font-size:18px;letter-spacing:1px;text-transform:uppercase">
+        <tr><td style="background:#0b0d0c;padding:18px 24px;color:#22c55e;font-weight:bold;font-size:18px">
           {$nombre}
         </td></tr>
         <tr><td style="padding:24px">
           <h1 style="margin:0 0 12px;font-size:22px">{$this->e($titulo)}</h1>
           <p style="margin:0 0 20px;font-size:15px;line-height:1.5;color:#37443c">{$mensajeHtml}</p>
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#07140d;border-radius:8px;color:#f4f6ee">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0b0d0c;border-radius:14px;color:#ffffff">
             <tr><td style="padding:16px 20px">
-              <div style="color:#ffb23f;font-size:12px;font-weight:bold;letter-spacing:1px">RESERVA #{$r['id']}</div>
+              <div style="color:#9aa09c;font-size:13px">Reserva #{$r['id']}</div>
               <div style="font-size:15px;margin-top:6px">{$fecha}</div>
-              <div style="font-size:30px;font-weight:bold;color:#ffb23f;margin-top:2px">{$horas}</div>
+              <div style="font-size:30px;font-weight:bold;color:#22c55e;margin-top:2px">{$horas}</div>
               <div style="font-size:15px;margin-top:6px">Total: <strong>{$monto}</strong></div>
             </td></tr>
           </table>
-          <p style="margin:24px 0 0"><a href="{$url}" style="display:inline-block;background:#15803d;color:#ffffff;text-decoration:none;font-weight:bold;padding:12px 20px;border-radius:6px">{$this->e($boton[0])}</a></p>
+          <p style="margin:24px 0 0"><a href="{$url}" style="display:inline-block;background:#22c55e;color:#0b0d0c;text-decoration:none;font-weight:bold;padding:13px 24px;border-radius:999px">{$this->e($boton[0])}</a></p>
         </td></tr>
       </table>
     </td></tr>

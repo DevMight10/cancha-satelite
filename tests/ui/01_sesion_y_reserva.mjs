@@ -1,6 +1,6 @@
 // Prueba de interfaz: registro, cierre e inicio de sesión, y reservar un turno.
 // Ejecutar: node tests/ui/01_sesion_y_reserva.mjs
-import { abrirNavegador, afirmar, credencial, paso, seccion, terminar } from './navegador.mjs';
+import { abrirNavegador, afirmar, credencial, elegirDia, paso, seccion, terminar } from './navegador.mjs';
 
 const nav = await abrirNavegador();
 const sufijo = Date.now();
@@ -49,13 +49,22 @@ try {
 
   seccion('Reservar un turno con la sesión iniciada');
   await paso('elegir un turno libre muestra el precio y el botón Confirmar', async () => {
-    await nav.clic('.dia:nth-child(3)'); // pasado mañana: seguro hay turnos futuros
+    await elegirDia(nav, 1); // en el calendario: un día con turnos libres que no sea el primero
     await nav.esperarQue(`document.querySelector('.turno.libre')`, { descripcion: 'turnos libres' });
-    await nav.clic('.turno.libre:last-of-type');
+    await nav.evaluar(`[...document.querySelectorAll('.turno.libre')].at(-1).click()`); // el último libre del día
     await nav.esperarQue(`document.querySelector('#confirmar')`, { descripcion: 'botón Confirmar' });
     const precio = await nav.texto('.resumen-precio strong');
     afirmar(/^Bs \d+/.test(precio), `precio inesperado: ${precio}`);
     await nav.captura('01-reservar-seleccion', { completa: false });
+  });
+
+  await paso('el horario elegido sigue en negro con el mouse encima (el hover no lo tapa)', async () => {
+    await nav.pasarMouse('.turno[aria-pressed="true"]');
+    const e = await nav.evaluar(`(() => { const b = document.querySelector('.turno[aria-pressed="true"]');
+      return { hover: b.matches(':hover'), fondo: getComputedStyle(b).backgroundColor }; })()`);
+    afirmar(e.hover, 'el mouse no quedó encima del horario');
+    afirmar(e.fondo === 'rgb(11, 13, 12)', `fondo con hover: ${e.fondo}`);
+    await nav.captura('01-reservar-hover', { completa: false });
   });
 
   await paso('Confirmar crea la reserva y lleva a la pantalla de pago', async () => {
