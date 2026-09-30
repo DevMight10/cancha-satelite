@@ -24,8 +24,7 @@ final class UsuarioValidator
     public static function login(array $datos): void
     {
         Validator::make($datos)
-            ->requerido('email', 'El correo')
-            ->email('email')
+            ->requerido('email', 'El correo o usuario') // el administrador puede entrar con un usuario sin @
             ->requerido('password', 'La contraseña')
             ->validar();
     }

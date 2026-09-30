@@ -53,6 +53,8 @@ final class UsuarioRepository extends Repository
     /** Correos de los administradores activos (para avisos de pagos por revisar). */
     public function emailsAdministradores(): array
     {
-        return array_column($this->fetchAll("SELECT email FROM usuarios WHERE rol = 'admin' AND activo = 1"), 'email');
+        // Un administrador puede entrar con un nombre de usuario en vez de correo: solo se avisa a los correos válidos
+        $emails = array_column($this->fetchAll("SELECT email FROM usuarios WHERE rol = 'admin' AND activo = 1"), 'email');
+        return array_values(array_filter($emails, fn ($e) => filter_var($e, FILTER_VALIDATE_EMAIL) !== false));
     }
 }

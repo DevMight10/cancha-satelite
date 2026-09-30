@@ -43,7 +43,7 @@ final class AuthService
 
         $usuario = $this->usuarios->buscarPorEmailConPassword(mb_strtolower(trim($datos['email'])));
         if ($usuario === null || !password_verify((string) $datos['password'], $usuario['password_hash'])) {
-            throw new UnauthorizedException('El correo o la contraseña no son correctos');
+            throw new UnauthorizedException('El correo/usuario o la contraseña no son correctos');
         }
         if (!$usuario['activo']) {
             throw new UnauthorizedException('Esta cuenta está desactivada. Comunícate con la cancha.');
