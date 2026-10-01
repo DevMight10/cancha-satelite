@@ -23,7 +23,9 @@ final class ConfiguracionRepository extends Repository
 
     public function obtener(string $clave, string $porDefecto = ''): string
     {
-        return (string) ($this->todas()[$clave] ?? $porDefecto);
+        // Un valor guardado en blanco (sistema recién instalado) también usa el valor por defecto
+        $valor = (string) ($this->todas()[$clave] ?? '');
+        return $valor === '' ? $porDefecto : $valor;
     }
 
     public function entero(string $clave, int $porDefecto): int
