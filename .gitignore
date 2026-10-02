@@ -3,7 +3,7 @@ backend/vendor/
 
 # Credenciales
 backend/.env
-CREDENCIALES.md
+CREDENCIALES.*
 
 # Archivos generados en ejecución
 backend/storage/logs/*
