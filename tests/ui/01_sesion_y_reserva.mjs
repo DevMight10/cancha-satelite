@@ -1,6 +1,6 @@
 // Prueba de interfaz: registro, cierre e inicio de sesión, y reservar un turno.
 // Ejecutar: node tests/ui/01_sesion_y_reserva.mjs
-import { abrirNavegador, afirmar, credencial, elegirDia, paso, seccion, terminar } from './navegador.mjs';
+import { API, RAIZ, abrirNavegador, afirmar, credencial, elegirDia, paso, seccion, terminar } from './navegador.mjs';
 
 const nav = await abrirNavegador();
 const sufijo = Date.now();
@@ -20,8 +20,8 @@ try {
 
   await paso('"Salir" cierra la sesión y vuelve al inicio', async () => {
     await nav.clic('[data-salir]');
-    await nav.esperarQue(`location.pathname === '/'`, { descripcion: 'volver al inicio' });
-    const me = await nav.evaluar(`fetch('/api/auth/me').then(r => r.json())`);
+    await nav.esperarQue(`location.pathname === ${JSON.stringify(RAIZ)}`, { descripcion: 'volver al inicio' });
+    const me = await nav.evaluar(`fetch('${API}/auth/me').then(r => r.json())`);
     afirmar(me.data === null, 'la sesión sigue abierta');
   });
 
@@ -74,7 +74,7 @@ try {
 
   seccion('Administrador');
   await paso('el administrador entra y llega a su panel', async () => {
-    await nav.evaluar(`fetch('/api/auth/logout', { method: 'POST' })`);
+    await nav.evaluar(`fetch('${API}/auth/logout', { method: 'POST' })`);
     await nav.ir('/pages/auth/login.html');
     await nav.escribir('#email', credencial('ADMIN_DEV_EMAIL'));
     await nav.escribir('#password', credencial('ADMIN_DEV_PASSWORD'));

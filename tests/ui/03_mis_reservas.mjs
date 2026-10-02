@@ -1,6 +1,6 @@
 // Prueba de interfaz: historial de reservas y cancelación.
 // Ejecutar: node tests/ui/03_mis_reservas.mjs
-import { abrirNavegador, afirmar, paso, seccion, terminar } from './navegador.mjs';
+import { API, abrirNavegador, afirmar, paso, seccion, terminar } from './navegador.mjs';
 
 const nav = await abrirNavegador();
 const sufijo = Date.now();
@@ -9,9 +9,9 @@ const sufijo = Date.now();
 const reservarPorApi = (dias) => nav.evaluar(`(async () => {
   const d = new Date(); d.setDate(d.getDate() + ${dias});
   const fecha = d.toISOString().slice(0, 10);
-  const disp = await (await fetch('/api/disponibilidad?fecha=' + fecha)).json();
+  const disp = await (await fetch('${API}/disponibilidad?fecha=' + fecha)).json();
   const turno = disp.data.turnos.find(t => t.estado === 'libre');
-  const r = await fetch('/api/reservas', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+  const r = await fetch('${API}/reservas', { method: 'POST', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ fecha, hora_inicio: turno.hora_inicio }) });
   return (await r.json()).data.id;
 })()`);

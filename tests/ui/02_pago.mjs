@@ -64,7 +64,7 @@ try {
   seccion('Celular (390 px)');
   await paso('la pantalla de pago se adapta al celular sin scroll horizontal', async () => {
     await nav.viewport(390, 844, true);
-    await nav.ir(await nav.evaluar('location.pathname + location.search'));
+    await nav.ir(await nav.evaluar('location.href'));
     await nav.esperarQue(`document.querySelector('.ticket')`);
     const desborde = await nav.evaluar('document.documentElement.scrollWidth - window.innerWidth');
     afirmar(desborde <= 0, `hay ${desborde}px de scroll horizontal`);

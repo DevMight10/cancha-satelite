@@ -15,7 +15,10 @@ const RUTAS_NAVEGADOR = [
   '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
 ];
 
-export const BASE = process.env.BASE_UI ?? 'http://cancha-satelite.test';
+export const BASE = (process.env.BASE_UI ?? 'http://cancha-satelite.test').replace(/\/$/, '');
+// Ruta de la API vista desde el navegador: '/api' en la raíz o '/cancha-satelite/api' en una subcarpeta
+export const RAIZ = `${new URL(BASE).pathname.replace(/\/$/, '')}/`; // '/' o '/cancha-satelite/'
+export const API = `${RAIZ}api`;
 // VER=1 abre una ventana visible de Chrome y pausa entre acciones para poder seguir la prueba
 const VISIBLE = process.env.VER === '1';
 const PAUSA = VISIBLE ? Number(process.env.PAUSA ?? 700) : 0;
@@ -215,7 +218,7 @@ export function terminar() {
  * (0 = el primero), avanzando de mes con la flecha si hace falta. Devuelve la fecha elegida.
  */
 export async function elegirDia(nav, indice = 0) {
-  const fecha = await nav.evaluar(`fetch('/api/disponibilidad/dias').then(r => r.json())
+  const fecha = await nav.evaluar(`fetch('${API}/disponibilidad/dias').then(r => r.json())
     .then(j => (j.data ?? j).filter(d => d.abierto && d.libres > 0)[${indice}]?.fecha)`);
   if (!fecha) throw new Error(`no hay un día disponible número ${indice}`);
   await nav.esperarQue(`document.querySelector('.cal-dia')`, { descripcion: 'calendario' });

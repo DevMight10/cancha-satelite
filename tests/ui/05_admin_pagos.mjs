@@ -3,7 +3,7 @@
 import { execFileSync } from 'node:child_process';
 import { mkdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { CAPTURAS, abrirNavegador, afirmar, credencial, elegirDia, paso, seccion, terminar } from './navegador.mjs';
+import { API, CAPTURAS, abrirNavegador, afirmar, credencial, elegirDia, paso, seccion, terminar } from './navegador.mjs';
 
 const PHP = process.env.PHP ?? 'C:/laragon/bin/php/php-8.3.26-Win32-vs16-x64/php.exe';
 mkdirSync(CAPTURAS, { recursive: true });
@@ -17,7 +17,7 @@ const emailCliente = `revision${sufijo}@prueba.test`;
 let reservaId;
 
 const entrarComo = async (email, password) => {
-  await nav.evaluar(`fetch('/api/auth/logout', { method: 'POST' })`);
+  await nav.evaluar(`fetch('${API}/auth/logout', { method: 'POST' })`);
   await nav.ir('/pages/auth/login.html');
   await nav.escribir('#email', email);
   await nav.escribir('#password', password);

@@ -2,6 +2,7 @@ import { adminApi } from '../../api/adminApi.js';
 import { confirmar } from '../../components/dialogo.js';
 import { enviarFormulario, manejarError } from '../../components/formulario.js';
 import { toast } from '../../components/toast.js';
+import { RUTAS } from '../../config.js';
 import { iniciarAdmin } from '../../core/admin.js';
 import { $, $$, html, pintar } from '../../utils/dom.js';
 import { ESTADOS_PAGO, ESTADOS_RESERVA, METODOS_PAGO, dinero, fechaCorta, hora, hoyIso, rangoHoras, sumarDias } from '../../utils/formato.js';
@@ -69,7 +70,7 @@ function render() {
               <td class="derecha num">${dinero(r.precio)}</td>
               <td class="acciones">
                 ${cobrable ? html`<button type="button" class="btn btn-sm btn-primario" data-cobrar="${r.id}"><i data-lucide="banknote"></i>Cobrar</button>` : ''}
-                ${r.pago_estado === 'pendiente' ? html`<a class="btn btn-sm" href="/pages/admin/pagos.html">Revisar pago</a>` : ''}
+                ${r.pago_estado === 'pendiente' ? html`<a class="btn btn-sm" href="${RUTAS.adminPagos}">Revisar pago</a>` : ''}
                 ${whatsapp ? html`<a class="btn btn-sm btn-fantasma" href="${whatsapp}" target="_blank" rel="noopener" aria-label="WhatsApp a ${r.cliente_nombre}"><i data-lucide="message-circle"></i></a>` : ''}
                 ${activa(r) ? html`<button type="button" class="btn btn-sm btn-peligro" data-cancelar="${r.id}">Cancelar</button>` : ''}
               </td>

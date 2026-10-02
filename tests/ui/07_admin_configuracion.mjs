@@ -1,9 +1,9 @@
 // Prueba de interfaz: configuración (horarios, tarifas con vista previa, días bloqueados, reglas y QR).
 // Ejecutar: node tests/ui/07_admin_configuracion.mjs   (deja la configuración como estaba)
-import { abrirNavegador, afirmar, credencial, paso, seccion, terminar } from './navegador.mjs';
+import { API, abrirNavegador, afirmar, credencial, paso, seccion, terminar } from './navegador.mjs';
 
 const nav = await abrirNavegador({ ancho: 1440, alto: 900 });
-const api = (ruta) => nav.evaluar(`fetch('/api${ruta}').then(r => r.json()).then(j => j.data)`);
+const api = (ruta) => nav.evaluar(`fetch('${API}${ruta}').then(r => r.json()).then(j => j.data)`);
 const enDias = (n) => nav.evaluar(`(() => { const d = new Date(); d.setDate(d.getDate() + ${n}); return d.toISOString().slice(0, 10); })()`);
 const filaTarifa = `[...document.querySelectorAll('#lista-tarifas tbody tr')].find(tr => tr.innerText.includes('Promo UI'))`;
 

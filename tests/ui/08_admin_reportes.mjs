@@ -2,7 +2,7 @@
 // Ejecutar: node tests/ui/08_admin_reportes.mjs
 import { existsSync, readdirSync, rmSync, statSync } from 'node:fs';
 import { join } from 'node:path';
-import { CAPTURAS, abrirNavegador, afirmar, credencial, paso, seccion, terminar } from './navegador.mjs';
+import { API, CAPTURAS, abrirNavegador, afirmar, credencial, paso, seccion, terminar } from './navegador.mjs';
 
 const nav = await abrirNavegador({ ancho: 1440, alto: 900 });
 const descargas = join(CAPTURAS, 'descargas');
@@ -33,7 +33,7 @@ try {
 
   seccion('Contenido');
   await paso('las cifras coinciden con la API', async () => {
-    const api = await nav.evaluar(`fetch('/api/admin/reportes' + location.search).then(r => r.json()).then(j => j.data.resumen)`);
+    const api = await nav.evaluar(`fetch('${API}/admin/reportes' + location.search).then(r => r.json()).then(j => j.data.resumen)`);
     const confirmadas = await nav.evaluar(`[...document.querySelectorAll('.cifras div')].find(d => d.innerText.startsWith('Reservas')).querySelector('dd').textContent`);
     afirmar(Number(confirmadas) === api.confirmadas, `pantalla ${confirmadas} vs API ${api.confirmadas}`);
     afirmar(api.confirmadas > 0, 'no hay datos de prueba en el rango');
@@ -56,10 +56,10 @@ try {
 
   let urlReporte;
   await paso('los periodos rápidos cambian el rango', async () => {
-    urlReporte = await nav.evaluar('location.pathname + location.search');
+    urlReporte = await nav.evaluar('location.href');
     await nav.clic('[data-periodo="30"]');
     await nav.esperarQue(`location.search.includes('desde=')`);
-    const dias = await nav.evaluar(`fetch('/api/admin/reportes' + location.search).then(r => r.json()).then(j => j.data.por_dia.length)`);
+    const dias = await nav.evaluar(`fetch('${API}/admin/reportes' + location.search).then(r => r.json()).then(j => j.data.por_dia.length)`);
     afirmar(dias === 30, `días: ${dias}`);
   });
 
@@ -79,7 +79,7 @@ try {
 
   await paso('en celular no hay scroll horizontal', async () => {
     await nav.viewport(390, 844, true);
-    await nav.ir(await nav.evaluar('location.pathname + location.search'));
+    await nav.ir(await nav.evaluar('location.href'));
     await nav.esperarQue(`document.querySelector('.cifra-principal dd')`);
     const desborde = await nav.evaluar('document.documentElement.scrollWidth - window.innerWidth');
     afirmar(desborde <= 0, `hay ${desborde}px de scroll horizontal`);

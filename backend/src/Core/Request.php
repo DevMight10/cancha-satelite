@@ -27,6 +27,14 @@ final class Request
     public static function fromGlobals(string $prefix): self
     {
         $path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+
+        // Si el sistema está en una subcarpeta (http://localhost/cancha-satelite/), se quita esa carpeta.
+        // index.php vive en <carpeta>/backend/public/index.php: tres niveles arriba está la carpeta.
+        $carpeta = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '/', 3)), '/');
+        if ($carpeta !== '' && str_starts_with($path, $carpeta . '/')) {
+            $path = substr($path, strlen($carpeta));
+        }
+
         if ($prefix !== '' && str_starts_with($path, $prefix)) {
             $path = substr($path, strlen($prefix));
         }

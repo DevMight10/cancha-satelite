@@ -1,6 +1,6 @@
 // Prueba de interfaz: panel del administrador (agenda del día y semana).
 // Ejecutar: node tests/ui/04_admin_panel.mjs
-import { abrirNavegador, afirmar, credencial, paso, seccion, terminar } from './navegador.mjs';
+import { API, abrirNavegador, afirmar, credencial, paso, seccion, terminar } from './navegador.mjs';
 
 const nav = await abrirNavegador({ ancho: 1440, alto: 900 });
 
@@ -16,7 +16,7 @@ try {
     await nav.esperarUrl('/pages/reservar.html');
     await nav.ir('/pages/admin/index.html');
     await nav.esperarUrl('/pages/reservar.html');
-    await nav.evaluar(`fetch('/api/auth/logout', { method: 'POST' })`);
+    await nav.evaluar(`fetch('${API}/auth/logout', { method: 'POST' })`);
   });
 
   await paso('el administrador inicia sesión y llega al panel', async () => {
@@ -40,7 +40,7 @@ try {
     const conReservas = await nav.evaluar(`(async () => {
       for (let i = 0; i < 14; i++) {
         const d = new Date(); d.setDate(d.getDate() + i); const f = d.toISOString().slice(0, 10);
-        const p = await (await fetch('/api/admin/panel?fecha=' + f)).json();
+        const p = await (await fetch('${API}/admin/panel?fecha=' + f)).json();
         if (p.data.resumen.reservas > 0) return f;
       }
       return null;

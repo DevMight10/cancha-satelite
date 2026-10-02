@@ -1,3 +1,4 @@
+import { CONFIG } from '../config.js';
 import { http } from './http.js';
 
 export const reservasApi = {
@@ -6,5 +7,5 @@ export const reservasApi = {
   obtener: (id) => http.get(`/reservas/${id}`),
   cancelar: (id, motivo = '') => http.post(`/reservas/${id}/cancelar`, { motivo }),
   enviarPago: (id, formData) => http.post(`/reservas/${id}/pagos`, formData),
-  urlComprobante: (pagoId) => `/api/pagos/${pagoId}/comprobante`,
+  urlComprobante: (pagoId) => `${CONFIG.API_URL}/pagos/${pagoId}/comprobante`,
 };
