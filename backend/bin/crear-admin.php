@@ -6,7 +6,8 @@ declare(strict_types=1);
  * Crea un administrador (o convierte en administrador una cuenta existente).
  *
  * Uso, desde la carpeta backend/:
- *   php bin/crear-admin.php "Nombre Apellido" correo@ejemplo.com 71234567 "contraseña-segura"
+ *   php bin/crear-admin.php nombre_de_usuario correo@ejemplo.com 71234567 "contraseña-segura"
+ * El administrador puede entrar con el correo o con el nombre de usuario.
  */
 
 use App\Core\Env;
@@ -32,7 +33,7 @@ try {
     foreach ($e->errores as $campo => $mensaje) {
         fwrite(STDERR, "  - {$campo}: {$mensaje}\n");
     }
-    fwrite(STDERR, "Uso: php bin/crear-admin.php \"Nombre\" correo@ejemplo.com 71234567 \"contraseña\"\n");
+    fwrite(STDERR, "Uso: php bin/crear-admin.php nombre_de_usuario correo@ejemplo.com 71234567 \"contraseña\"\n");
     exit(1);
 }
 
