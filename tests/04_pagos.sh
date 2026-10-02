@@ -49,7 +49,7 @@ PAGO=$(json 'r.data.pagos[0].id')
 STATUS=$(curl -s -o /dev/null -w '%{http_code}' -b "$TMP_DIR/cli" "$BASE/pagos/$PAGO/comprobante"); espera_status 200 "el cliente puede ver su comprobante"
 STATUS=$(curl -s -o /dev/null -w '%{http_code}' -b "$TMP_DIR/otro" "$BASE/pagos/$PAGO/comprobante"); espera_status 404 "otro cliente no puede ver ese comprobante"
 STATUS=$(curl -s -o /dev/null -w '%{http_code}' -b "$TMP_DIR/adm" "$BASE/pagos/$PAGO/comprobante"); espera_status 200 "el administrador sí puede verlo"
-STATUS=$(curl -s -o /dev/null -w '%{http_code}' "http://cancha-satelite.test/backend/storage/uploads/comprobantes/"); espera_status 403 "la carpeta de comprobantes no es accesible desde el navegador"
+STATUS=$(curl -s -o /dev/null -w '%{http_code}' "${BASE%/api}/backend/storage/uploads/comprobantes/"); espera_status 403 "la carpeta de comprobantes no es accesible desde el navegador"
 
 if pedir adm GET /admin/pagos?estado=pendiente && [ "$STATUS" = "200" ]; then
   seccion "Revisión por el administrador"
