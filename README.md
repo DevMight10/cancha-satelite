@@ -84,19 +84,16 @@ Cada capa solo habla con la de abajo: el Controller no escribe SQL y el Reposito
 
 ## Puesta en marcha
 
-El sistema debe estar en la **raíz** del sitio (por ejemplo `http://localhost` o `http://cancha-satelite.test`),
-porque usa rutas absolutas como `/api` y `/assets`. No funciona en `http://localhost/cancha-satelite/`.
+El sistema funciona tanto en la raíz de un sitio (`http://cancha-satelite.test`) como dentro de una
+subcarpeta (`http://localhost/cancha-satelite/`): el frontend calcula la carpeta desde la ubicación de
+`js/config.js` y el backend desde la de `backend/public/index.php`. No hay que configurar nada.
 
 ### 1. Servidor web
 
 **Con XAMPP**
 1. Copia (o clona) el proyecto en `C:\xampp\htdocs\cancha-satelite`.
-2. En `C:\xampp\apache\conf\httpd.conf` cambia la raíz del sitio:
-   ```
-   DocumentRoot "C:/xampp/htdocs/cancha-satelite"
-   ```
-   (el bloque `<Directory "C:/xampp/htdocs">` ya permite el `.htaccess`). phpMyAdmin sigue en `http://localhost/phpmyadmin`.
-3. En el panel de XAMPP inicia **Apache** y **MySQL**. El sistema queda en `http://localhost`.
+2. En el panel de XAMPP inicia **Apache** y **MySQL**. El sistema queda en `http://localhost/cancha-satelite`
+   y la base se ve en `http://localhost/phpmyadmin`.
 
 **Con Laragon**: deja el proyecto en `C:\laragon\www\cancha-satelite` y presiona **Iniciar todo**;
 Laragon crea `http://cancha-satelite.test`. La base se puede ver en `http://localhost/adminer`.
@@ -124,7 +121,7 @@ XAMPP y Laragon usan los mismos puertos (80 y 3306): solo uno puede estar encend
 ### 3. Backend
 
 1. Copia `backend/.env.example` como `backend/.env` y completa:
-   `DB_PASSWORD` (la del paso anterior), `APP_URL` (`http://localhost` o `http://cancha-satelite.test`)
+   `DB_PASSWORD` (la del paso anterior), `APP_URL` (`http://localhost/cancha-satelite` o `http://cancha-satelite.test`)
    y los datos de correo `MAIL_*`.
 2. Genera el autoload desde `backend/`: `composer dump-autoload` (crea `backend/vendor/`).
 3. Crea el primer administrador desde `backend/`:
@@ -211,7 +208,7 @@ bash tests/ejecutar-todo.sh ui     # solo interfaz (Chrome headless)
 Por defecto apuntan a `http://cancha-satelite.test` (Laragon). Para probar contra XAMPP (PowerShell):
 
 ```
-$env:BASE = "http://localhost/api"; $env:BASE_UI = "http://localhost"; bash tests/ejecutar-todo.sh
+$env:BASE = "http://localhost/cancha-satelite/api"; $env:BASE_UI = "http://localhost/cancha-satelite"; bash tests/ejecutar-todo.sh
 ```
 
 - Necesitan que el sistema tenga horarios y precios configurados.
