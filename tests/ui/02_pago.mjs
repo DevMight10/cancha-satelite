@@ -17,7 +17,7 @@ try {
   seccion('Pantalla de pago');
   await paso('un cliente nuevo reserva y llega a pagar', async () => {
     await nav.ir('/pages/auth/registro.html');
-    await nav.escribir('#nombre', 'Mario Pago Interfaz');
+    await nav.escribir('#nombre', `Mario Pago ${sufijo}`);
     await nav.escribir('#telefono', '71234599');
     await nav.escribir('#email', `pago-ui${sufijo}@prueba.test`);
     await nav.escribir('#password', 'clave-segura-1');

@@ -8,7 +8,7 @@ try {
   seccion('Acceso');
   await paso('un cliente no puede entrar al panel (lo manda a Reservar)', async () => {
     await nav.ir('/pages/auth/registro.html');
-    await nav.escribir('#nombre', 'Cliente Curioso');
+    await nav.escribir('#nombre', `Cliente Curioso ${Date.now()}`);
     await nav.escribir('#telefono', '71230000');
     await nav.escribir('#email', `curioso${Date.now()}@prueba.test`);
     await nav.escribir('#password', 'clave-segura-1');

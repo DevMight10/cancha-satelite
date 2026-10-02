@@ -17,7 +17,8 @@ CREATE TABLE IF NOT EXISTS usuarios (
   activo         TINYINT(1) NOT NULL DEFAULT 1,
   creado_en      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   actualizado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  UNIQUE KEY uq_usuarios_email (email)
+  UNIQUE KEY uq_usuarios_email (email),
+  UNIQUE KEY uq_usuarios_nombre (nombre) COMMENT 'El nombre de usuario también sirve para iniciar sesión'
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------------------------

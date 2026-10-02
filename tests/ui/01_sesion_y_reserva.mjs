@@ -9,7 +9,7 @@ try {
   seccion('Registro desde la interfaz');
   await paso('crea una cuenta y entra directo a Reservar con la sesión iniciada', async () => {
     await nav.ir('/pages/auth/registro.html');
-    await nav.escribir('#nombre', 'Lucía Prueba Interfaz');
+    await nav.escribir('#nombre', `Lucía Prueba ${Date.now()}`);
     await nav.escribir('#telefono', '7 123 4567');
     await nav.escribir('#email', `ui${sufijo}@prueba.test`);
     await nav.escribir('#password', 'clave-segura-1');

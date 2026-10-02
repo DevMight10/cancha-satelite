@@ -84,7 +84,9 @@ Cada capa solo habla con la de abajo: el Controller no escribe SQL y el Reposito
    mysql -uroot --default-character-set=utf8mb4 < database/01_crear_base.sql
    mysql -uroot --default-character-set=utf8mb4 < database/02_esquema.sql
    mysql -uroot --default-character-set=utf8mb4 < database/03_datos_iniciales.sql
+   mysql -uroot --default-character-set=utf8mb4 < database/04_nombre_usuario_unico.sql
    ```
+   El script `04` solo hace falta en bases creadas antes de que el nombre de usuario fuera único; se puede ejecutar siempre.
 3. Crea el usuario de MySQL exclusivo del proyecto (no se usa `root`), cambiando `TU_CONTRASEÑA`:
    ```sql
    CREATE USER 'cancha_app'@'localhost' IDENTIFIED BY 'TU_CONTRASEÑA';

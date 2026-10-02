@@ -6,7 +6,7 @@ ENV_FILE="$(dirname "$0")/../backend/.env"
 ADMIN_EMAIL=$(grep 'ADMIN_DEV_EMAIL=' "$ENV_FILE" | cut -d= -f2)
 ADMIN_PASS=$(grep 'ADMIN_DEV_PASSWORD=' "$ENV_FILE" | cut -d= -f2)
 pedir adm POST /auth/login "{\"email\":\"$ADMIN_EMAIL\",\"password\":\"$ADMIN_PASS\"}"
-pedir cli POST /auth/registro "{\"nombre\":\"Curioso Reportes\",\"email\":\"rep$SUFIJO@prueba.test\",\"telefono\":\"73336666\",\"password\":\"clave-segura-1\"}"
+pedir cli POST /auth/registro "{\"nombre\":\"Curioso Reportes $SUFIJO\",\"email\":\"rep$SUFIJO@prueba.test\",\"telefono\":\"73336666\",\"password\":\"clave-segura-1\"}"
 
 DESDE=$(date +%F); HASTA=$(date -d '+14 day' +%F)
 

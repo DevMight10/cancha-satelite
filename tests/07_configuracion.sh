@@ -9,7 +9,7 @@ ENV_FILE="$RAIZ/backend/.env"
 ADMIN_EMAIL=$(grep 'ADMIN_DEV_EMAIL=' "$ENV_FILE" | cut -d= -f2)
 ADMIN_PASS=$(grep 'ADMIN_DEV_PASSWORD=' "$ENV_FILE" | cut -d= -f2)
 pedir adm POST /auth/login "{\"email\":\"$ADMIN_EMAIL\",\"password\":\"$ADMIN_PASS\"}"
-pedir cli POST /auth/registro "{\"nombre\":\"Curioso Config\",\"email\":\"cfg$SUFIJO@prueba.test\",\"telefono\":\"73335555\",\"password\":\"clave-segura-1\"}"
+pedir cli POST /auth/registro "{\"nombre\":\"Curioso Config $SUFIJO\",\"email\":\"cfg$SUFIJO@prueba.test\",\"telefono\":\"73335555\",\"password\":\"clave-segura-1\"}"
 
 proximo() { # proximo <día ISO 1-7> -> fecha del próximo día de la semana (desde pasado mañana)
   node -e "const d=new Date(); d.setDate(d.getDate()+2); while(((d.getDay()+6)%7)+1!==$1) d.setDate(d.getDate()+1); console.log(d.toISOString().slice(0,10))"

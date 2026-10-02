@@ -21,8 +21,8 @@ reservar_turno() { # reservar_turno <cookies> -> deja RESERVA
   done
 }
 
-pedir cli POST /auth/registro "{\"nombre\":\"Pagador Prueba\",\"email\":\"pago$SUFIJO@prueba.test\",\"telefono\":\"71112222\",\"password\":\"clave-segura-1\"}"
-pedir otro POST /auth/registro "{\"nombre\":\"Otro Cliente\",\"email\":\"otro$SUFIJO@prueba.test\",\"telefono\":\"71113333\",\"password\":\"clave-segura-1\"}"
+pedir cli POST /auth/registro "{\"nombre\":\"Pagador Prueba $SUFIJO\",\"email\":\"pago$SUFIJO@prueba.test\",\"telefono\":\"71112222\",\"password\":\"clave-segura-1\"}"
+pedir otro POST /auth/registro "{\"nombre\":\"Otro Cliente $SUFIJO\",\"email\":\"otro$SUFIJO@prueba.test\",\"telefono\":\"71113333\",\"password\":\"clave-segura-1\"}"
 pedir adm POST /auth/login "{\"email\":\"$ADMIN_EMAIL\",\"password\":\"$ADMIN_PASS\"}"
 reservar_turno cli
 

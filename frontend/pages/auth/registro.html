@@ -31,7 +31,8 @@
 
         <div class="campo">
           <label for="nombre">Nombre de usuario</label>
-          <input class="control" id="nombre" name="nombre" autocomplete="nickname" maxlength="100" required>
+          <input class="control" id="nombre" name="nombre" autocomplete="username" autocapitalize="none" spellcheck="false" maxlength="100" aria-describedby="nombre-ayuda" required>
+          <p class="ayuda" id="nombre-ayuda">Con él o con tu correo inicias sesión. Debe ser único.</p>
           <p class="error-campo"></p>
         </div>
 

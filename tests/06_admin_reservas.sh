@@ -7,7 +7,7 @@ ADMIN_EMAIL=$(grep 'ADMIN_DEV_EMAIL=' "$ENV_FILE" | cut -d= -f2)
 ADMIN_PASS=$(grep 'ADMIN_DEV_PASSWORD=' "$ENV_FILE" | cut -d= -f2)
 
 pedir adm POST /auth/login "{\"email\":\"$ADMIN_EMAIL\",\"password\":\"$ADMIN_PASS\"}"
-pedir cli POST /auth/registro "{\"nombre\":\"Cliente Web\",\"email\":\"web$SUFIJO@prueba.test\",\"telefono\":\"73334444\",\"password\":\"clave-segura-1\"}"
+pedir cli POST /auth/registro "{\"nombre\":\"Cliente Web $SUFIJO\",\"email\":\"web$SUFIJO@prueba.test\",\"telefono\":\"73334444\",\"password\":\"clave-segura-1\"}"
 
 for i in $(seq 4 14); do
   FECHA=$(node -e "const d=new Date(); d.setDate(d.getDate()+$i); console.log(d.toISOString().slice(0,10))")

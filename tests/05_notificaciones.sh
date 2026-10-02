@@ -23,7 +23,7 @@ EMAIL="avisos$SUFIJO@prueba.test"
 IMG="$TMP_DIR/comprobante.png"
 "$PHP" -r "\$i=imagecreatetruecolor(40,40); imagepng(\$i, '$IMG');"
 
-pedir cli POST /auth/registro "{\"nombre\":\"Cliente Avisos\",\"email\":\"$EMAIL\",\"telefono\":\"72223333\",\"password\":\"clave-segura-1\"}"
+pedir cli POST /auth/registro "{\"nombre\":\"Cliente Avisos $SUFIJO\",\"email\":\"$EMAIL\",\"telefono\":\"72223333\",\"password\":\"clave-segura-1\"}"
 pedir adm POST /auth/login "{\"email\":\"$ADMIN_EMAIL\",\"password\":\"$ADMIN_PASS\"}"
 
 for i in $(seq 3 14); do

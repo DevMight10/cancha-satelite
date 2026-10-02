@@ -19,11 +19,32 @@ final class UsuarioRepository extends Repository
         return $this->fetchOne('SELECT ' . self::COLUMNAS . ', password_hash FROM usuarios WHERE email = ?', [$email]);
     }
 
+    /**
+     * Cuenta para iniciar sesión por correo o por nombre de usuario (sin distinguir mayúsculas).
+     * Si el texto coincide con un correo, ese tiene prioridad. Incluye password_hash.
+     */
+    public function buscarParaLogin(string $identificador): ?array
+    {
+        return $this->fetchOne(
+            'SELECT ' . self::COLUMNAS . ', password_hash FROM usuarios WHERE email = ? OR nombre = ? ORDER BY email = ? DESC LIMIT 1',
+            [$identificador, $identificador, $identificador]
+        );
+    }
+
     public function existeEmail(string $email, ?int $excluirId = null): bool
     {
         return $this->fetchOne(
             'SELECT 1 FROM usuarios WHERE email = ? AND id <> ?',
             [$email, $excluirId ?? 0]
+        ) !== null;
+    }
+
+    /** El nombre de usuario es único (la colación de la tabla no distingue mayúsculas). */
+    public function existeNombre(string $nombre, ?int $excluirId = null): bool
+    {
+        return $this->fetchOne(
+            'SELECT 1 FROM usuarios WHERE nombre = ? AND id <> ?',
+            [$nombre, $excluirId ?? 0]
         ) !== null;
     }
 

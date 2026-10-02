@@ -104,6 +104,12 @@ final class Validator
             in_array($v, $permitidos, true) ? null : $mensaje);
     }
 
+    public function sinCaracter(string $campo, string $caracter, string $mensaje): self
+    {
+        return $this->regla($campo, fn (mixed $v): ?string =>
+            is_string($v) && !str_contains($v, $caracter) ? null : $mensaje);
+    }
+
     public function igual(string $campo, string $otroCampo, string $mensaje): self
     {
         return $this->regla($campo, fn (mixed $v): ?string =>

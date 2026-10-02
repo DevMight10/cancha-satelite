@@ -20,7 +20,7 @@ try {
   seccion('Mis reservas');
   await paso('un cliente sin reservas ve el estado vacío con un botón para reservar', async () => {
     await nav.ir('/pages/auth/registro.html');
-    await nav.escribir('#nombre', 'Rosa Historial');
+    await nav.escribir('#nombre', `Rosa Historial ${Date.now()}`);
     await nav.escribir('#telefono', '61234567');
     await nav.escribir('#email', `historial${sufijo}@prueba.test`);
     await nav.escribir('#password', 'clave-segura-1');

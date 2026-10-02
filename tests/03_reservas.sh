@@ -3,7 +3,7 @@
 source "$(dirname "$0")/lib.sh"
 
 registrar() { # registrar <cookies> <email>
-  pedir "$1" POST /auth/registro "{\"nombre\":\"Jugador $1\",\"email\":\"$2\",\"telefono\":\"7$(printf '%07d' $((RANDOM*7 % 10000000)))\",\"password\":\"clave-segura-1\"}"
+  pedir "$1" POST /auth/registro "{\"nombre\":\"Jugador $1 $SUFIJO\",\"email\":\"$2\",\"telefono\":\"7$(printf '%07d' $((RANDOM*7 % 10000000)))\",\"password\":\"clave-segura-1\"}"
 }
 registrar ana "ana$SUFIJO@prueba.test"
 registrar beto "beto$SUFIJO@prueba.test"
