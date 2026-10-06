@@ -73,7 +73,8 @@ cancha-satelite/
 │   └── storage/
 │       ├── logs/                  ← registro de errores
 │       └── uploads/               ← comprobantes/ y config/ (QR); no accesibles desde la web
-├── database/                      ← scripts SQL numerados (01 a 04)
+├── database/instalar.sql          ← crea la base, las tablas, el usuario cancha_app y el admin
+├── INSTALAR.txt                   ← guía de instalación para el cliente
 ├── tests/                         ← pruebas de API (*.sh) y de interfaz (ui/*.mjs)
 ├── docs/diseno/                   ← dirección visual
 └── .claude/skills/                ← skills de diseño usadas (ui-ux-pro-max, impeccable)
@@ -102,34 +103,34 @@ XAMPP y Laragon usan los mismos puertos (80 y 3306): solo uno puede estar encend
 
 ### 2. Base de datos
 
-1. Ejecuta los scripts de `database/` en orden (en phpMyAdmin con **Importar**, o por consola indicando UTF-8):
-   ```
-   mysql -uroot --default-character-set=utf8mb4 < database/01_crear_base.sql
-   mysql -uroot --default-character-set=utf8mb4 < database/02_esquema.sql
-   mysql -uroot --default-character-set=utf8mb4 < database/03_datos_iniciales.sql
-   mysql -uroot --default-character-set=utf8mb4 < database/04_nombre_usuario_unico.sql
-   ```
-   `03` carga un horario, precios y reglas **de ejemplo**. `04` solo hace falta en bases creadas
-   antes de que el nombre de usuario fuera único; se puede ejecutar siempre.
-2. Crea el usuario de MySQL exclusivo del proyecto (no se usa `root`), cambiando `TU_CONTRASEÑA`:
-   ```sql
-   CREATE USER 'cancha_app'@'localhost' IDENTIFIED BY 'TU_CONTRASEÑA';
-   CREATE USER 'cancha_app'@'127.0.0.1' IDENTIFIED BY 'TU_CONTRASEÑA';
-   GRANT SELECT, INSERT, UPDATE, DELETE ON cancha_satelite.* TO 'cancha_app'@'localhost', 'cancha_app'@'127.0.0.1';
-   ```
+Importa **`database/instalar.sql`** como `root`: en phpMyAdmin, sin elegir ninguna base, pestaña **Importar**;
+o por consola indicando UTF-8:
+```
+mysql -uroot --default-character-set=utf8mb4 < database/instalar.sql
+```
+Ese único archivo crea:
+- la base `cancha_satelite` con todas sus tablas;
+- el usuario de MySQL del sistema, `cancha_app` (contraseña `CanchaSatelite2026`, la misma de `backend/.env`),
+  que solo puede leer y modificar datos;
+- el administrador `admin123` (contraseña `admin123`);
+- un horario, precios y reglas **de ejemplo**, con los medios de pago vacíos y los avisos por correo desactivados.
+
+Si la base ya existe no borra nada: solo crea lo que falte. Una base creada antes de que el nombre de usuario
+fuera único necesita además: `ALTER TABLE usuarios ADD UNIQUE KEY uq_usuarios_nombre (nombre);`
+
+`INSTALAR.txt` explica la instalación paso a paso para quien no es programador.
 
 ### 3. Backend
 
 1. Copia `backend/.env.example` como `backend/.env` y completa:
-   `DB_PASSWORD` (la del paso anterior), `APP_URL` (`http://localhost/cancha-satelite` o `http://cancha-satelite.test`)
-   y los datos de correo `MAIL_*`.
+   `DB_PASSWORD` (`CanchaSatelite2026` si usaste `instalar.sql`), `APP_URL`
+   (`http://localhost/cancha-satelite` o `http://cancha-satelite.test`) y los datos de correo `MAIL_*`.
 2. Genera el autoload desde `backend/`: `composer dump-autoload` (crea `backend/vendor/`).
-3. Crea el primer administrador desde `backend/`:
-   ```
-   php bin/crear-admin.php nombre_de_usuario correo@ejemplo.com 71234567 "contraseña-segura"
-   ```
-4. Abre el sitio, entra con el administrador y completa **Configuración**: horarios, precios,
+3. Abre el sitio, entra con `admin123` y completa **Configuración**: horarios, precios,
    QR, Tigo Money, cuenta bancaria, WhatsApp y correo del negocio (ahí llegan los avisos de comprobantes).
+
+Para crear otro administrador, desde `backend/`:
+`php bin/crear-admin.php nombre_de_usuario correo@ejemplo.com 71234567 "contraseña-segura"`.
 
 **Correos**: con Laragon llegan a **Mailpit** (`http://localhost:8025`). XAMPP no trae un buzón de prueba:
 sin un SMTP configurado en `MAIL_*` los avisos no se envían (quedan registrados como fallidos) y el resto
@@ -223,8 +224,9 @@ $env:BASE = "http://localhost/cancha-satelite/api"; $env:BASE_UI = "http://local
 
 1. Ejecuta `composer dump-autoload` en tu computadora y sube también `backend/vendor/`.
 2. Sube todo el proyecto a la carpeta pública (`htdocs`). El `.htaccess` de la raíz enruta `/api` y protege `backend/`.
-3. Crea la base en el panel del hosting, importa los scripts de `database/` con phpMyAdmin y ajusta `backend/.env`
-   (`DB_*`, `APP_URL`, `APP_DEBUG=false`).
+3. Crea la base y su usuario en el panel del hosting (los hostings compartidos no permiten crearlos por SQL).
+   Importa `database/instalar.sql` con phpMyAdmin **quitando antes** las líneas `CREATE DATABASE`/`USE` del inicio
+   y la sección final del usuario `cancha_app`. Ajusta `backend/.env` (`DB_*`, `APP_URL`, `APP_DEBUG=false`).
 4. Correo: configura `MAIL_*` con el SMTP del hosting o Gmail (`smtp.gmail.com`, 587, `tls`, contraseña de aplicación).
    Si el hosting gratuito no permite SMTP, desactiva los avisos en Configuración → Reglas y negocio.
 5. Activa HTTPS (SSL) en el panel del hosting.

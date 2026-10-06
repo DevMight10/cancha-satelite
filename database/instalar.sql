@@ -1,8 +1,26 @@
--- Esquema del sistema de reservas y pagos de la cancha de Satélite Norte.
--- Ejecutar después de 01_crear_base.sql.
+-- =============================================================================
+--  Cancha Satélite Norte · Instalación de la base de datos
+--  Generado el 2026-10-02
+--
+--  Cómo usarlo: en phpMyAdmin (http://localhost/phpmyadmin), SIN elegir ninguna
+--  base de datos, abre la pestaña "Importar", elige este archivo y pulsa "Importar".
+--
+--  Crea:
+--    · la base de datos `cancha_satelite` con todas sus tablas
+--    · el usuario de MySQL que usa el sistema: cancha_app
+--    · el administrador del sistema: admin123 (contraseña admin123)
+--    · un horario, precios y reglas de ejemplo (se cambian desde Configuración)
+--
+--  Si la base ya existe, no borra nada: solo crea lo que falte.
+-- =============================================================================
 
 SET NAMES utf8mb4;
-USE cancha_satelite;
+
+CREATE DATABASE IF NOT EXISTS `cancha_satelite`
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
+
+USE `cancha_satelite`;
 
 -- ---------------------------------------------------------------------------
 -- Usuarios (clientes y administradores)
@@ -160,3 +178,56 @@ CREATE TABLE IF NOT EXISTS notificaciones (
   KEY idx_notificaciones_reserva (reserva_id),
   CONSTRAINT fk_notificaciones_reserva FOREIGN KEY (reserva_id) REFERENCES reservas(id) ON DELETE SET NULL
 ) ENGINE=InnoDB;
+
+-- ---------------------------------------------------------------------------
+-- Datos iniciales (editables desde el panel: Configuración)
+-- ---------------------------------------------------------------------------
+INSERT IGNORE INTO canchas (id, nombre, descripcion, duracion_turno)
+VALUES (1, 'Cancha Satélite Norte', 'Cancha de césped sintético', 60);
+
+-- Horario: todos los días de 08:00 a 23:00 (1 = lunes ... 7 = domingo)
+INSERT IGNORE INTO horarios_apertura (cancha_id, dia_semana, hora_apertura, hora_cierre, cerrado) VALUES
+  (1, 1, '08:00', '23:00', 0), (1, 2, '08:00', '23:00', 0), (1, 3, '08:00', '23:00', 0),
+  (1, 4, '08:00', '23:00', 0), (1, 5, '08:00', '23:00', 0), (1, 6, '08:00', '23:00', 0),
+  (1, 7, '08:00', '23:00', 0);
+
+-- Precios por turno (si varias tarifas coinciden, se cobra la más alta)
+INSERT INTO tarifas (cancha_id, nombre, dias, hora_desde, hora_hasta, precio)
+SELECT * FROM (
+  SELECT 1 AS cancha_id, 'Día (lunes a viernes)' AS nombre, '1,2,3,4,5' AS dias, '08:00' AS desde, '18:00' AS hasta, 100.00 AS precio UNION ALL
+  SELECT 1, 'Noche (lunes a viernes)', '1,2,3,4,5', '18:00', '23:00', 150.00 UNION ALL
+  SELECT 1, 'Fin de semana', '6,7', '08:00', '23:00', 160.00
+) AS t
+WHERE NOT EXISTS (SELECT 1 FROM tarifas);
+
+-- Datos del negocio y reglas. Los medios de pago quedan vacíos: se completan en Configuración.
+-- Los avisos por correo empiezan desactivados (hace falta configurar un correo en backend/.env).
+INSERT IGNORE INTO configuracion (clave, valor) VALUES
+  ('negocio_nombre',            'Cancha Satélite Norte'),
+  ('negocio_direccion',         'Satélite Norte'),
+  ('negocio_whatsapp',          ''),
+  ('negocio_email',             ''),
+  ('reserva_dias_anticipacion', '14'),
+  ('reserva_minutos_pago',      '30'),
+  ('reserva_horas_cancelacion', '3'),
+  ('pago_qr_imagen',            ''),
+  ('pago_qr_titular',           ''),
+  ('pago_tigo_numero',          ''),
+  ('pago_tigo_titular',         ''),
+  ('pago_banco_nombre',         ''),
+  ('pago_banco_cuenta',         ''),
+  ('pago_banco_titular',        ''),
+  ('notificar_email',           '0');
+
+-- Administrador del sistema: usuario admin123, contraseña admin123 (cámbiala después)
+INSERT IGNORE INTO usuarios (nombre, email, telefono, password_hash, rol)
+VALUES ('Administrador', 'admin123', '70000000', '$2y$10$lcKVHyWKqF2bD5A4OvVMTeABw9SWUTKc.CCei72LRGHnuFqzx6GYi', 'admin');
+
+-- ---------------------------------------------------------------------------
+-- Usuario de MySQL que usa el sistema (su contraseña está en backend/.env)
+-- ---------------------------------------------------------------------------
+CREATE USER IF NOT EXISTS 'cancha_app'@'localhost' IDENTIFIED BY 'CanchaSatelite2026';
+CREATE USER IF NOT EXISTS 'cancha_app'@'127.0.0.1' IDENTIFIED BY 'CanchaSatelite2026';
+GRANT SELECT, INSERT, UPDATE, DELETE ON `cancha_satelite`.* TO 'cancha_app'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON `cancha_satelite`.* TO 'cancha_app'@'127.0.0.1';
+FLUSH PRIVILEGES;

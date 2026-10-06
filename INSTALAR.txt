@@ -1,0 +1,125 @@
+==============================================================
+  CANCHA SATÉLITE NORTE · SISTEMA DE RESERVAS Y PAGOS
+  Guía de instalación
+==============================================================
+
+Lo que necesitas:
+  - Una computadora con Windows.
+  - XAMPP (gratis): https://www.apachefriends.org
+    Cualquier versión con PHP 8.1 o más nuevo.
+  - El archivo cancha-satelite.zip
+
+
+--------------------------------------------------------------
+PASO 1 · Copiar el sistema
+--------------------------------------------------------------
+  1. Descomprime cancha-satelite.zip.
+     Aparece una carpeta llamada  cancha-satelite
+
+  2. Copia esa carpeta dentro de  C:\xampp\htdocs
+
+  3. Revisa que quedó así (sin carpetas repetidas):
+
+       C:\xampp\htdocs\cancha-satelite\backend
+       C:\xampp\htdocs\cancha-satelite\frontend
+       C:\xampp\htdocs\cancha-satelite\database
+
+     Si ves  C:\xampp\htdocs\cancha-satelite\cancha-satelite\...
+     mueve la carpeta de adentro un nivel hacia arriba.
+
+
+--------------------------------------------------------------
+PASO 2 · Encender XAMPP
+--------------------------------------------------------------
+  1. Abre el "XAMPP Control Panel".
+  2. Pulsa  Start  en  Apache  y en  MySQL.
+  3. Los dos nombres deben quedar en verde.
+
+
+--------------------------------------------------------------
+PASO 3 · Crear la base de datos (una sola vez)
+--------------------------------------------------------------
+  1. En el navegador abre:  http://localhost/phpmyadmin
+  2. NO elijas ninguna base de datos de la lista de la izquierda.
+  3. Arriba, entra a la pestaña  Importar.
+  4. En "Archivo a importar" pulsa  Seleccionar archivo  y elige:
+       C:\xampp\htdocs\cancha-satelite\database\instalar.sql
+  5. Baja hasta el final y pulsa  Importar.
+  6. Debe aparecer un mensaje verde diciendo que la importación
+     terminó bien. A la izquierda aparecerá la base  cancha_satelite.
+
+
+--------------------------------------------------------------
+PASO 4 · Entrar al sistema
+--------------------------------------------------------------
+  Dirección:  http://localhost/cancha-satelite
+
+  Pulsa  Iniciar sesión  y entra como administrador:
+    Usuario ........ admin123
+    Contraseña ..... admin123
+
+
+--------------------------------------------------------------
+PASO 5 · Configurar la cancha (en el menú  Configuración)
+--------------------------------------------------------------
+  - Horarios ........... qué días y de qué hora a qué hora atiendes.
+  - Precios ............ cuánto cuesta cada turno. Cada hora en que
+                         atiendes debe tener un precio; si no, ese
+                         horario no se muestra a los clientes.
+  - Medios de pago ..... sube tu QR y escribe tu número de Tigo Money
+                         y/o tu cuenta bancaria. Los clientes solo
+                         ven los medios que completes.
+  - Reglas y negocio ... días de anticipación para reservar, minutos
+                         para pagar, horas para cancelar, WhatsApp
+                         y correo de la cancha.
+
+  El sistema ya trae un horario (08:00 a 23:00) y precios de ejemplo:
+  cámbialos por los tuyos.
+
+
+--------------------------------------------------------------
+USO DIARIO
+--------------------------------------------------------------
+  - Cada vez que prendas la computadora, abre XAMPP y pulsa Start en
+    Apache y MySQL antes de usar el sistema.
+  - Tus clientes crean su cuenta en "Crear cuenta" y reservan.
+  - En  Pagos  revisas los comprobantes y los apruebas o rechazas.
+  - En  Reservas  puedes registrar reservas hechas en la cancha y
+    cobros en efectivo.
+  - En  Reportes  ves los ingresos y puedes descargarlos en Excel o PDF.
+
+
+--------------------------------------------------------------
+COPIA DE SEGURIDAD (recomendado cada semana)
+--------------------------------------------------------------
+  1. En http://localhost/phpmyadmin elige la base  cancha_satelite,
+     entra a  Exportar  y pulsa  Exportar. Guarda el archivo .sql.
+  2. Copia también la carpeta con los comprobantes y el QR:
+       C:\xampp\htdocs\cancha-satelite\backend\storage\uploads
+
+
+--------------------------------------------------------------
+SI ALGO NO FUNCIONA
+--------------------------------------------------------------
+  "No se encuentra la página" (Not Found)
+    -> Revisa el PASO 1: la carpeta debe ser
+       C:\xampp\htdocs\cancha-satelite  (sin carpetas repetidas).
+
+  Apache no se pone en verde
+    -> Otro programa usa el puerto 80 (por ejemplo Skype u otro
+       servidor). Ciérralo y vuelve a pulsar Start.
+
+  MySQL no se pone en verde
+    -> Otro programa usa el puerto 3306 (otro MySQL instalado).
+       Ciérralo y vuelve a pulsar Start.
+
+  Aparece "Error interno del servidor" o no carga ningún horario
+    -> Revisa que MySQL esté en verde y que hiciste el PASO 3.
+       Puedes volver a importar instalar.sql: no borra nada.
+
+  Correos de aviso
+    -> Vienen desactivados. Para enviar correos hay que configurar
+       una cuenta de correo en el archivo
+       C:\xampp\htdocs\cancha-satelite\backend\.env
+       (las instrucciones están dentro del archivo) y luego activarlos
+       en Configuración > Reglas y negocio.
